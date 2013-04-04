@@ -1,0 +1,223 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FC36062C170D02EF00FA67AE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC36062B170D02EF00FA67AE /* main.cpp */; };
+		FC36062E170D02EF00FA67AE /* PhysicsEngine.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC36062D170D02EF00FA67AE /* PhysicsEngine.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FC360626170D02EF00FA67AE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				FC36062E170D02EF00FA67AE /* PhysicsEngine.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FC360628170D02EF00FA67AE /* PhysicsEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PhysicsEngine; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC36062B170D02EF00FA67AE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		FC36062D170D02EF00FA67AE /* PhysicsEngine.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PhysicsEngine.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FC360625170D02EF00FA67AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FC36061F170D02EF00FA67AE = {
+			isa = PBXGroup;
+			children = (
+				FC36062A170D02EF00FA67AE /* PhysicsEngine */,
+				FC360629170D02EF00FA67AE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FC360629170D02EF00FA67AE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FC360628170D02EF00FA67AE /* PhysicsEngine */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FC36062A170D02EF00FA67AE /* PhysicsEngine */ = {
+			isa = PBXGroup;
+			children = (
+				FC36062B170D02EF00FA67AE /* main.cpp */,
+				FC36062D170D02EF00FA67AE /* PhysicsEngine.1 */,
+			);
+			path = PhysicsEngine;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FC360627170D02EF00FA67AE /* PhysicsEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC360631170D02EF00FA67AE /* Build configuration list for PBXNativeTarget "PhysicsEngine" */;
+			buildPhases = (
+				FC360624170D02EF00FA67AE /* Sources */,
+				FC360625170D02EF00FA67AE /* Frameworks */,
+				FC360626170D02EF00FA67AE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhysicsEngine;
+			productName = PhysicsEngine;
+			productReference = FC360628170D02EF00FA67AE /* PhysicsEngine */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FC360620170D02EF00FA67AE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = BrennerWeithers;
+			};
+			buildConfigurationList = FC360623170D02EF00FA67AE /* Build configuration list for PBXProject "PhysicsEngine" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FC36061F170D02EF00FA67AE;
+			productRefGroup = FC360629170D02EF00FA67AE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FC360627170D02EF00FA67AE /* PhysicsEngine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FC360624170D02EF00FA67AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC36062C170D02EF00FA67AE /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FC36062F170D02EF00FA67AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FC360630170D02EF00FA67AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FC360632170D02EF00FA67AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FC360633170D02EF00FA67AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FC360623170D02EF00FA67AE /* Build configuration list for PBXProject "PhysicsEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC36062F170D02EF00FA67AE /* Debug */,
+				FC360630170D02EF00FA67AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC360631170D02EF00FA67AE /* Build configuration list for PBXNativeTarget "PhysicsEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC360632170D02EF00FA67AE /* Debug */,
+				FC360633170D02EF00FA67AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FC360620170D02EF00FA67AE /* Project object */;
+}
