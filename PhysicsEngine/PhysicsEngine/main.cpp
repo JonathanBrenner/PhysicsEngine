@@ -7,6 +7,9 @@
 //
 
 #include <iostream>
+#include "glm.hpp"
+#include "matrix_transform.hpp"
+#include "type_ptr.hpp"
 
 int main(int argc, const char * argv[])
 {
