@@ -11,6 +11,12 @@
 *.lai
 *.la
 *.a
+# XCode Project Files
+*.xcodeproj
+*.DS_Store
+*.xcuserstate
+
+#Visual Studio project files
 ipch
 Debug
 PhysicsEngine.sdf
