@@ -11,3 +11,8 @@
 *.lai
 *.la
 *.a
+ipch
+Debug
+PhysicsEngine.sdf
+.DS_Store
+PhysicsEngine.sln

@@ -8,6 +8,11 @@
 
 #include "Transform.h"
 
+Transform::Transform()
+{
+	modelMatrix = glm::mat4(1.0f);
+}
+
 void Transform::translate(float x, float y, float z)
 {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));

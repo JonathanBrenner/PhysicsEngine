@@ -18,13 +18,16 @@ class Transform
 public:
     glm::vec3 position;
     
+	Transform();
+
     void translate(float x, float y, float z);
     
     // Rotate using Euler angles
     void rotate(float x, float y, float z);
 
+	glm::mat4 modelMatrix;
+
 private:
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
 };
 
 #endif /* defined(__PhysicsEngine__Transform__) */
