@@ -60,6 +60,8 @@ void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
+void CollisionDetection();
+void CollisionResponse();
 
 
 int main(int argc, char* argv[])
