@@ -14,9 +14,9 @@ GameObject::GameObject()
 
 GameObject::GameObject(std::string pathName, int index)
 {
-	ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-	LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-	ProjectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f); 
+	viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	lightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	projectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f); 
 
 	shaderProgramID = index - 1;
 
@@ -236,9 +236,9 @@ void GameObject::Create(GLuint shaderProgramID1)
     OnGLError("ERROR: Could not link the shader program");
 
     //Uniform variables that will be updated every draw call
-	ViewMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ViewMatrix");
-	ProjectionMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ProjectionMatrix");
-	LightMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "LightMatrix");
+	viewMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ViewMatrix");
+	projectionMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ProjectionMatrix");
+	lightMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "LightMatrix");
     OnGLError("ERROR: Could not get shader uniform locations");
 
 	modelMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ModelMatrix");
@@ -312,9 +312,9 @@ void GameObject::UpdateModelMatrix()
     OnGLError("DRAW_ERROR: Could not use the shader program");
 
 	glUniformMatrix4fv(modelMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transform.modelMatrix));
-	glUniformMatrix4fv(ViewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
-	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
-	glUniformMatrix4fv(LightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(LightMatrix));
+	glUniformMatrix4fv(viewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniformMatrix4fv(projectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniformMatrix4fv(lightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(lightMatrix));
     OnGLError("ERROR: Could not set the shader uniforms");
 }
 

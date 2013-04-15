@@ -46,7 +46,7 @@ GLuint
 	
 
 float CubeRotation = 0;
-double LastTime = 0, Now = 0; //Not floats! We may need the resolution!
+double LastTime = 0, DeltaTime = 0, Now = 0; //Not floats! We may need the resolution!
 
 std::vector<GameObject*> gameObjects;
 
@@ -161,7 +161,15 @@ void game_loop(void){
     int playing;
     playing = GL_TRUE;
     while( playing && glfwGetWindowParam( GLFW_OPENED ) )
-    {        
+    {   
+		Now = glfwGetTime();
+		DeltaTime = LastTime - Now;
+
+		if (LastTime == 0)
+			LastTime = Now;
+	
+		LastTime = Now;
+
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )
@@ -169,10 +177,26 @@ void game_loop(void){
             playing = GL_FALSE;
         }
        
+		//Collision
+		CollisionDetection();
+		CollisionResponse();
+
         // Display
         DrawCube();
         glfwSwapBuffers();
     }
+}
+
+// I'll do my thing here
+void CollisionDetection()
+{
+	// GJKing it up
+
+}
+
+// Do your thing here
+void CollisionResponse()
+{
 }
 
 void CreateCube()
@@ -187,14 +211,7 @@ void CreateCube()
 }
 
 void DrawCube(void)
-{
-	Now = glfwGetTime();
-
-	if (LastTime == 0)
-		LastTime = Now;
-
-	LastTime = Now;
-    
+{    
     //clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     

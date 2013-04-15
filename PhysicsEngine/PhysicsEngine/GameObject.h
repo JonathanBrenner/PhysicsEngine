@@ -58,13 +58,13 @@ private:
 	GLuint shaderProgramID;
 	GLuint fragmentShaderID;
 	GLuint vertexShaderID;
-	GLuint ProjectionMatrixUniformLocation;
-	GLuint ViewMatrixUniformLocation;
-	GLuint LightMatrixUniformLocation;
+	GLuint projectionMatrixUniformLocation;
+	GLuint viewMatrixUniformLocation;
+	GLuint lightMatrixUniformLocation;
 
-	glm::mat4 ViewMatrix;
-	glm::mat4 LightMatrix;
-	glm::mat4 ProjectionMatrix;
+	glm::mat4 viewMatrix;
+	glm::mat4 lightMatrix;
+	glm::mat4 projectionMatrix;
 };
 
 #endif /* defined(__PhysicsEngine__GameObject__) */
