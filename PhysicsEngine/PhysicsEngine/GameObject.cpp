@@ -12,15 +12,14 @@ GameObject::GameObject()
 {
 }
 
-GameObject::GameObject(std::string pathName, int hi)
+GameObject::GameObject(std::string pathName, int index)
 {
 	ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	ProjectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f); 
 
-	shaderProgramID = hi - 1;
+	shaderProgramID = index - 1;
 
-	//shaderProgramID = 0;
 	Vertex temp;
 	temp.position[3] = 1;
 	temp.uv[0] = 0;
@@ -157,15 +156,6 @@ GameObject::GameObject(std::string pathName, int hi)
 			}
 		}
     }
-
-	if(hi == 2)
-	{
-		transform.translate(0.5, 0.5, 0.0);
-	}
-	else
-	{
-		transform.translate(-0.5, -0.5, 0.0);
-	}
 }
 
 GameObject::GameObject(const GameObject& orig)

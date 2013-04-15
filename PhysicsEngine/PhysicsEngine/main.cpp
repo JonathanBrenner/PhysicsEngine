@@ -34,9 +34,6 @@ glm::mat4 ProjectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f);
 static const double PI = 3.14159265358979323846;
 
 GLuint
-	//ProjectionMatrixUniformLocation,
-	//ViewMatrixUniformLocation,
-	//LightMatrixUniformLocation,
     VaoID = 0,
 	TimeLocation,
 	samplerLoc,
@@ -127,15 +124,10 @@ void Initialize(int argc, char* argv[])
 	OnGLError("Cull face");
 	glFrontFace(GL_CCW);
 	OnGLError("Front face");
-	
-	//move the "camera" two units toward us, look at the origin, +y is up
-	//lookAt() is equivalent to R_{WV} * E, the transpose of the camera-to-world orientation matrix times the camera's translation matrix
-    //ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-	//LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     
-	GameObject* object = new GameObject("container.obj", 1);
+	GameObject* object1 = new GameObject("container.obj", 1);
 	GameObject* object2 = new GameObject("container.obj", 2);
-	gameObjects.push_back(object);
+	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
 
     CreateCube();
@@ -187,50 +179,9 @@ void CreateCube()
 {
    	printf("Create\n");
 
-    //we create a shader program, attach to shaders to it (vertex and fragment), then link
-    /*shaderProgramID = glCreateProgram();
-    printf("%d\n",shaderProgramID);
-    OnGLError("ERROR: Could not create the shader program");
-	
-	fragmentShaderID = LoadShader("container.fs", GL_FRAGMENT_SHADER);
-	vertexShaderID = LoadShader("container.vs", GL_VERTEX_SHADER);
-	
-	glAttachShader(shaderProgramID, vertexShaderID);
-	glAttachShader(shaderProgramID, fragmentShaderID);
-	
-	//if not using "location" in shader
-	glBindAttribLocation(shaderProgramID, 0, "in_Position");
-	glBindAttribLocation(shaderProgramID, 1, "in_Tex");
-	glBindAttribLocation(shaderProgramID, 2, "in_Normal");
-
-	glLinkProgram(shaderProgramID);
-    OnGLError("ERROR: Could not link the shader program");
-
-    //Uniform variables that will be updated every draw call
-	ViewMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ViewMatrix");
-	ProjectionMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ProjectionMatrix");
-	LightMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "LightMatrix");
-    OnGLError("ERROR: Could not get shader uniform locations");*/
-    
-    //Create the VAO, the object that specifies how the vertex data is organized
-	/*glGenVertexArrays(1, &VaoID);
-    OnGLError("ERROR: Could not generate the VAO");
-	glBindVertexArray(VaoID);
-    OnGLError("ERROR: Could not bind the VAO");
-
-    //we have two vertex attributes that we care about, and our shader is set up to take in position as the first argument
-    //and color as the second
-	glEnableVertexAttribArray(0); //in_Position
-	glEnableVertexAttribArray(1); //in_Color
-    OnGLError("ERROR: Could not enable vertex attributes");*/
-
-	OnGLError("ERROR 6");
-
 	//Create all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
-		//std::cout << i << std::endl;
-		//OnGLError("SUPER BIG ERROR");
 		gameObjects[i]->Create(shaderProgramID);
 	}
 }
@@ -247,36 +198,17 @@ void DrawCube(void)
     //clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-	//glUseProgram(shaderProgramID);
-    //OnGLError("DRAW_ERROR: Could not use the shader program");
-
 	//Update all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->UpdateModelMatrix();
 	}
 
-    //update uniform variables for this frame
-	/*glUniformMatrix4fv(ViewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
-	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
-	glUniformMatrix4fv(LightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(LightMatrix));
-    OnGLError("ERROR: Could not set the shader uniforms");*/
-	
-	//glBindVertexArray(VaoID);
-    //OnGLError("ERROR: Could not bind the VAO for drawing purposes");
-    
-    //glDrawElements draws the indices of the active GL_ARRAY_BUFFER as specified by the buffer bound to the
-    //GL_ELEMENT_ARRAY_BUFFER target (the IBO)
-    
 	//Draw all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->Draw();
 	}
-
-    //not necessary right now, but a good habit
-	//glBindVertexArray(0);
-	//glUseProgram(0);
 }
 
 /*void DestroyCube()

@@ -29,7 +29,7 @@ class GameObject
 {
 public:
     GameObject();
-	GameObject(std::string pathName, int hi);
+	GameObject(std::string pathName, int index);
     GameObject(const GameObject& orig);
 	~GameObject();
 
