@@ -29,18 +29,21 @@ class GameObject
 {
 public:
     GameObject();
-	GameObject(std::string pathName);
+	GameObject(std::string pathName, int hi);
     GameObject(const GameObject& orig);
+	~GameObject();
 
-	void Create(GLuint shaderProgramID);
+	void Create(GLuint shaderProgramID1);
 	void UpdateModelMatrix();
 	void Draw();
 
+	void OnGLError(const char* error_message);
+	GLuint LoadShader(const char* filename, GLenum shader_type);
+
     Transform transform;
     Rigidbody rigidbody;
-
-	void OnGLError(const char* error_message);
 	std::vector<Vertex> vertices;
+
 private:
 	std::vector<GLuint> indices;
 	std::vector<UV> uvs;
@@ -48,8 +51,20 @@ private:
 
 	GLuint modelMatrixUniformLocation;
 	GLuint vboID;
+	GLuint vaoID;
 	GLuint iboID;
 	GLuint texID;
+	GLuint samplerLoc;
+	GLuint shaderProgramID;
+	GLuint fragmentShaderID;
+	GLuint vertexShaderID;
+	GLuint ProjectionMatrixUniformLocation;
+	GLuint ViewMatrixUniformLocation;
+	GLuint LightMatrixUniformLocation;
+
+	glm::mat4 ViewMatrix;
+	glm::mat4 LightMatrix;
+	glm::mat4 ProjectionMatrix;
 };
 
 #endif /* defined(__PhysicsEngine__GameObject__) */

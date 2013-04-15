@@ -24,31 +24,8 @@
 
 int WindowWidth = 800, WindowHeight = 450;
 
-//for our colored cube, all verts need to contain are position and color
-/*typedef struct Vertex
-{
-	float Position[4];
-    float UV[2];
-    float normals[3];
-} Vertex;
-
-typedef struct UV
-{
-	float u;
-	float v;
-} UV;
-
-typedef struct Normal
-{
-	float x;
-	float y;
-	float z;
-} Normal;*/
-
 //specify the "camera"
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
-//specify the cube's origin
-//glm::mat4 ModelMatrix = glm::mat4(1.0f);
 //specify the light source
 glm::mat4 LightMatrix = glm::mat4(1.0f);
 //specify the matrix to warp points appropriately for a perspective view
@@ -57,19 +34,15 @@ glm::mat4 ProjectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f);
 static const double PI = 3.14159265358979323846;
 
 GLuint
-	ProjectionMatrixUniformLocation,
-	ViewMatrixUniformLocation,
-	//ModelMatrixUniformLocation,
-	LightMatrixUniformLocation,
+	//ProjectionMatrixUniformLocation,
+	//ViewMatrixUniformLocation,
+	//LightMatrixUniformLocation,
     VaoID = 0,
-    VboID = 0,
-    IboID = 0,
-	IboHI = 0,
 	TimeLocation,
 	samplerLoc,
 	BufferIds[3] = { 0 },
 	ShaderIds[3] = { 0 },
-    TexId,
+    texID,
 	shaderProgramID = 0,
 	vertexShaderID = 0,
 	fragmentShaderID = 0;
@@ -78,10 +51,6 @@ GLuint
 float CubeRotation = 0;
 double LastTime = 0, Now = 0; //Not floats! We may need the resolution!
 
-/*std::vector<Vertex> VERTICES;
-std::vector<GLuint> INDICES;
-std::vector<UV> UVS;
-std::vector<Normal> NORMALS;*/
 std::vector<GameObject*> gameObjects;
 
 void Initialize(int, char*[]);
@@ -89,7 +58,7 @@ void InitObject(void);
 void InitWindow(void);
 void CreateCube(void);
 void DrawCube(void);
-void DestroyCube(void);
+//void DestroyCube(void);
 void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
@@ -100,28 +69,17 @@ int main(int argc, char* argv[])
 {
 	Initialize(argc, argv);
     game_loop();
-    DestroyCube();
+    //DestroyCube();
 	exit(EXIT_SUCCESS);
 }
 
 void Initialize(int argc, char* argv[])
 {
-	GameObject* object = new GameObject("container.obj");
-	gameObjects.push_back(object);
-	std::cout << object->vertices.size();
-
-	for(int i = 0; i < gameObjects.size(); i++)
-	{
-		std::cout << "Number of vertices main 1: " << gameObjects[i]->vertices.size() << "\n";
-	}
-	std::cout << object->vertices.size();
-
 	GLenum GlewInitResult;
 
 	InitWindow();
 	OnGLError("Init window");
 
-    //My Mac seg faults without this line. I don't know what it does... :-/
 	glewExperimental = GL_TRUE;
 	
     GlewInitResult = glewInit();
@@ -172,13 +130,14 @@ void Initialize(int argc, char* argv[])
 	
 	//move the "camera" two units toward us, look at the origin, +y is up
 	//lookAt() is equivalent to R_{WV} * E, the transpose of the camera-to-world orientation matrix times the camera's translation matrix
-    ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-	LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+    //ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	//LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     
-	for(int i = 0; i < gameObjects.size(); i++)
-	{
-		std::cout << "Number of vertices main 2: " << gameObjects[i]->vertices.size() << "\n";
-	}
+	GameObject* object = new GameObject("container.obj", 1);
+	GameObject* object2 = new GameObject("container.obj", 2);
+	gameObjects.push_back(object);
+	gameObjects.push_back(object2);
+
     CreateCube();
 }
 
@@ -229,12 +188,12 @@ void CreateCube()
    	printf("Create\n");
 
     //we create a shader program, attach to shaders to it (vertex and fragment), then link
-    shaderProgramID = glCreateProgram();
+    /*shaderProgramID = glCreateProgram();
     printf("%d\n",shaderProgramID);
     OnGLError("ERROR: Could not create the shader program");
 	
-	fragmentShaderID = LoadShader("cube.fs", GL_FRAGMENT_SHADER);
-	vertexShaderID = LoadShader("cube.vs", GL_VERTEX_SHADER);
+	fragmentShaderID = LoadShader("container.fs", GL_FRAGMENT_SHADER);
+	vertexShaderID = LoadShader("container.vs", GL_VERTEX_SHADER);
 	
 	glAttachShader(shaderProgramID, vertexShaderID);
 	glAttachShader(shaderProgramID, fragmentShaderID);
@@ -251,10 +210,10 @@ void CreateCube()
 	ViewMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ViewMatrix");
 	ProjectionMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ProjectionMatrix");
 	LightMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "LightMatrix");
-    OnGLError("ERROR: Could not get shader uniform locations");
+    OnGLError("ERROR: Could not get shader uniform locations");*/
     
     //Create the VAO, the object that specifies how the vertex data is organized
-	glGenVertexArrays(1, &VaoID);
+	/*glGenVertexArrays(1, &VaoID);
     OnGLError("ERROR: Could not generate the VAO");
 	glBindVertexArray(VaoID);
     OnGLError("ERROR: Could not bind the VAO");
@@ -263,11 +222,15 @@ void CreateCube()
     //and color as the second
 	glEnableVertexAttribArray(0); //in_Position
 	glEnableVertexAttribArray(1); //in_Color
-    OnGLError("ERROR: Could not enable vertex attributes");
+    OnGLError("ERROR: Could not enable vertex attributes");*/
+
+	OnGLError("ERROR 6");
 
 	//Create all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
+		//std::cout << i << std::endl;
+		//OnGLError("SUPER BIG ERROR");
 		gameObjects[i]->Create(shaderProgramID);
 	}
 }
@@ -284,8 +247,8 @@ void DrawCube(void)
     //clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-	glUseProgram(shaderProgramID);
-    OnGLError("DRAW_ERROR: Could not use the shader program");
+	//glUseProgram(shaderProgramID);
+    //OnGLError("DRAW_ERROR: Could not use the shader program");
 
 	//Update all the things
 	for(int i = 0; i < gameObjects.size(); i++)
@@ -294,14 +257,13 @@ void DrawCube(void)
 	}
 
     //update uniform variables for this frame
-	//glUniformMatrix4fv(ModelMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
-	glUniformMatrix4fv(ViewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+	/*glUniformMatrix4fv(ViewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
 	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
 	glUniformMatrix4fv(LightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(LightMatrix));
-    OnGLError("ERROR: Could not set the shader uniforms");
-
-	glBindVertexArray(VaoID);
-    OnGLError("ERROR: Could not bind the VAO for drawing purposes");
+    OnGLError("ERROR: Could not set the shader uniforms");*/
+	
+	//glBindVertexArray(VaoID);
+    //OnGLError("ERROR: Could not bind the VAO for drawing purposes");
     
     //glDrawElements draws the indices of the active GL_ARRAY_BUFFER as specified by the buffer bound to the
     //GL_ELEMENT_ARRAY_BUFFER target (the IBO)
@@ -312,16 +274,12 @@ void DrawCube(void)
 		gameObjects[i]->Draw();
 	}
 
-    //what primitive to draw, how many elements (indices), data type of the index (GLuint), where to start from (offset)
-	//glDrawElements(GL_TRIANGLES, sizeof(INDICES[0]) * INDICES.size()/sizeof(GLuint), GL_UNSIGNED_INT, (GLvoid*)0);
-	//OnGLError("ERROR: Could not draw the cube");
-
     //not necessary right now, but a good habit
-	glBindVertexArray(0);
-	glUseProgram(0);
+	//glBindVertexArray(0);
+	//glUseProgram(0);
 }
 
-void DestroyCube()
+/*void DestroyCube()
 {
 	glDetachShader(shaderProgramID, vertexShaderID);
 	glDetachShader(shaderProgramID, fragmentShaderID);
@@ -333,7 +291,7 @@ void DestroyCube()
 	glDeleteBuffers(2, &VboID);
 	glDeleteVertexArrays(1, &VaoID);
 	OnGLError("ERROR: Could not destroy the buffer objects");
-}
+}*/
 
 
 void checkShader(GLuint shader)

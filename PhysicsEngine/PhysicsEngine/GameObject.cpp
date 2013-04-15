@@ -10,13 +10,17 @@
 
 GameObject::GameObject()
 {
-	transform = Transform();
 }
 
-GameObject::GameObject(std::string pathName)
+GameObject::GameObject(std::string pathName, int hi)
 {
-	//GameObject();
+	ViewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	LightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	ProjectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f); 
 
+	shaderProgramID = hi - 1;
+
+	//shaderProgramID = 0;
 	Vertex temp;
 	temp.position[3] = 1;
 	temp.uv[0] = 0;
@@ -153,6 +157,15 @@ GameObject::GameObject(std::string pathName)
 			}
 		}
     }
+
+	if(hi == 2)
+	{
+		transform.translate(0.5, 0.5, 0.0);
+	}
+	else
+	{
+		transform.translate(-0.5, -0.5, 0.0);
+	}
 }
 
 GameObject::GameObject(const GameObject& orig)
@@ -160,9 +173,96 @@ GameObject::GameObject(const GameObject& orig)
     
 }
 
-void GameObject::Create(GLuint shaderProgramID)
+GameObject::~GameObject()
 {
+
+}
+
+GLuint GameObject::LoadShader(const char* filename, GLenum shader_type)
+{
+	GLuint shader_id = 0;
+	FILE* file;
+	long file_size = -1;
+	GLchar* glsl_source;
+    fprintf(stderr, "name: %s\n",filename);
+
+	if (NULL != (file = fopen(filename, "rb")) &&
+		0 == fseek(file, 0, SEEK_END) &&
+		-1 != (file_size = ftell(file)))
+	{
+		rewind(file);
+		
+		if (NULL != (glsl_source = (GLchar*)malloc(file_size + 1)))
+		{
+			if (file_size == (long)fread(glsl_source, sizeof(GLchar), file_size, file))
+			{
+				glsl_source[file_size] = '\0';
+                const GLchar* glsl_source_c = glsl_source;
+				fprintf(stderr, "Source: %s\n", glsl_source_c);
+
+				if (0 != (shader_id = glCreateShader(shader_type)))
+				{
+					glShaderSource(shader_id, 1, &glsl_source_c, NULL);
+					glCompileShader(shader_id);
+					OnGLError("Could not compile a shader");
+				}
+				else
+					fprintf(stderr, "ERROR: Could not create a shader.\n");
+			}
+			else
+				fprintf(stderr, "ERROR: Could not read file %s\n", filename);
+
+			free(glsl_source);
+		}
+		else
+			fprintf(stderr, "ERROR: Could not allocate %li bytes.\n", file_size);
+
+		fclose(file);
+	}
+	else
+		fprintf(stderr, "ERROR: Could not open file %s\n", filename);
+
+	return shader_id;
+}
+
+void GameObject::Create(GLuint shaderProgramID1)
+{
+	shaderProgramID = glCreateProgram();
+    printf("%d\n",shaderProgramID);
+    OnGLError("ERROR: Could not create the shader program");
+	
+	fragmentShaderID = LoadShader("container.fs", GL_FRAGMENT_SHADER);
+	vertexShaderID = LoadShader("container.vs", GL_VERTEX_SHADER);
+	
+	glAttachShader(shaderProgramID, vertexShaderID);
+	glAttachShader(shaderProgramID, fragmentShaderID);
+	
+	//if not using "location" in shader
+	glBindAttribLocation(shaderProgramID, 0, "in_Position");
+	glBindAttribLocation(shaderProgramID, 1, "in_Tex");
+	glBindAttribLocation(shaderProgramID, 2, "in_Normal");
+
+	glLinkProgram(shaderProgramID);
+    OnGLError("ERROR: Could not link the shader program");
+
+    //Uniform variables that will be updated every draw call
+	ViewMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ViewMatrix");
+	ProjectionMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ProjectionMatrix");
+	LightMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "LightMatrix");
+    OnGLError("ERROR: Could not get shader uniform locations");
+
 	modelMatrixUniformLocation = glGetUniformLocation(shaderProgramID, "ModelMatrix");
+
+	glGenVertexArrays(1, &vaoID);
+    OnGLError("ERROR: Could not generate the VAO");
+	glBindVertexArray(vaoID);
+    OnGLError("ERROR: Could not bind the VAO");
+
+    //we have two vertex attributes that we care about, and our shader is set up to take in position as the first argument
+    //and color as the second
+	glEnableVertexAttribArray(0); //in_Position
+	glEnableVertexAttribArray(1); //in_Color
+    OnGLError("ERROR: Could not enable vertex attributes");
 
     //create the VBO, the object that refers to the vertex data itself
 	glGenBuffers(1, &vboID);
@@ -189,7 +289,7 @@ void GameObject::Create(GLuint shaderProgramID)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
     OnGLError("ERROR: Could not bind the IBO to the VAO");
 
-	glBindVertexArray(0);
+	glBindVertexArray(vaoID);
 
 	// Generate texture objects
     glGenTextures( 1, &texID );
@@ -203,27 +303,40 @@ void GameObject::Create(GLuint shaderProgramID)
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    
+
     // Upload texture from file to texture memory, auto-uses glTexImage2D, needs TGA
     if( !glfwLoadTexture2D( "container_diffuse.tga", 0 ) )
         fprintf( stderr, "Failed to load texture" );
         
     // since we're using mipmapping for the minification filter, we should tell texture unit to generate mipmaps
     glGenerateMipmap(GL_TEXTURE_2D);
-    
-    GLuint samplerLoc = glGetUniformLocation(shaderProgramID, "s_tex");
+    samplerLoc = glGetUniformLocation(shaderProgramID, "s_tex");
 
-    glUniform1i(samplerLoc, 0);
+	std::cout << samplerLoc << std::endl;
+	glUniform1i(samplerLoc, 0);
 }
 
 void GameObject::UpdateModelMatrix()
 {
+	glUseProgram(shaderProgramID);
+    OnGLError("DRAW_ERROR: Could not use the shader program");
+
 	glUniformMatrix4fv(modelMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transform.modelMatrix));
+	glUniformMatrix4fv(ViewMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+	glUniformMatrix4fv(LightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(LightMatrix));
+    OnGLError("ERROR: Could not set the shader uniforms");
 }
 
 void GameObject::Draw()
 {
+	glBindVertexArray(vaoID);
+    OnGLError("ERROR: Could not bind the VAO for drawing purposes");
+
 	glDrawElements(GL_TRIANGLES, sizeof(indices[0]) * indices.size()/sizeof(GLuint), GL_UNSIGNED_INT, (GLvoid*)0);
+
+	glBindVertexArray(vaoID);
+	glUseProgram(shaderProgramID);
 }
 
 
