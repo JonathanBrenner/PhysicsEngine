@@ -55,18 +55,18 @@ void InitObject(void);
 void InitWindow(void);
 void CreateCube(void);
 void DrawCube(void);
-//void DestroyCube(void);
 void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
+void CollisionDetection();
+void CollisionResponse();
 
 
 int main(int argc, char* argv[])
 {
 	Initialize(argc, argv);
     game_loop();
-    //DestroyCube();
 	exit(EXIT_SUCCESS);
 }
 
@@ -227,20 +227,6 @@ void DrawCube(void)
 		gameObjects[i]->Draw();
 	}
 }
-
-/*void DestroyCube()
-{
-	glDetachShader(shaderProgramID, vertexShaderID);
-	glDetachShader(shaderProgramID, fragmentShaderID);
-	glDeleteShader(vertexShaderID);
-	glDeleteShader(fragmentShaderID);
-	glDeleteProgram(shaderProgramID);
-	OnGLError("ERROR: Could not destroy the shaders");
-
-	glDeleteBuffers(2, &VboID);
-	glDeleteVertexArrays(1, &VaoID);
-	OnGLError("ERROR: Could not destroy the buffer objects");
-}*/
 
 
 void checkShader(GLuint shader)

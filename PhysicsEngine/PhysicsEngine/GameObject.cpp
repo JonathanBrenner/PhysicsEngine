@@ -165,7 +165,16 @@ GameObject::GameObject(const GameObject& orig)
 
 GameObject::~GameObject()
 {
+	glDetachShader(shaderProgramID, vertexShaderID);
+	glDetachShader(shaderProgramID, fragmentShaderID);
+	glDeleteShader(vertexShaderID);
+	glDeleteShader(fragmentShaderID);
+	glDeleteProgram(shaderProgramID);
+	OnGLError("ERROR: Could not destroy the shaders");
 
+	glDeleteBuffers(2, &vboID);
+	glDeleteVertexArrays(1, &vaoID);
+	OnGLError("ERROR: Could not destroy the buffer objects");
 }
 
 GLuint GameObject::LoadShader(const char* filename, GLenum shader_type)
@@ -228,9 +237,9 @@ void GameObject::Create(GLuint shaderProgramID1)
 	glAttachShader(shaderProgramID, fragmentShaderID);
 	
 	//if not using "location" in shader
-	glBindAttribLocation(shaderProgramID, 0, "in_Position");
-	glBindAttribLocation(shaderProgramID, 1, "in_Tex");
-	glBindAttribLocation(shaderProgramID, 2, "in_Normal");
+	glBindAttribLocation(shaderProgramID, 0, "in_position");
+	glBindAttribLocation(shaderProgramID, 1, "in_tex");
+	glBindAttribLocation(shaderProgramID, 2, "in_normal");
 
 	glLinkProgram(shaderProgramID);
     OnGLError("ERROR: Could not link the shader program");
@@ -302,7 +311,7 @@ void GameObject::Create(GLuint shaderProgramID1)
     glGenerateMipmap(GL_TEXTURE_2D);
     samplerLoc = glGetUniformLocation(shaderProgramID, "s_tex");
 
-	std::cout << samplerLoc << std::endl;
+	//std::cout << samplerLoc << std::endl;
 	glUniform1i(samplerLoc, 0);
 }
 

@@ -1,5 +1,5 @@
 //
-//  Rigidbody.h
+//  Vertex.h
 //  PhysicsEngine
 //
 //  Created by Sir Thomas Weithers on 4/7/13.
