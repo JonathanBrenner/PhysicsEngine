@@ -15,8 +15,10 @@
 class Rigidbody
 {
 public:
+	Rigidbody();
+
     glm::vec3 velocity;
-    float mass = 1;         // kilograms
+    float mass;         // kilograms
 
 private:
 };

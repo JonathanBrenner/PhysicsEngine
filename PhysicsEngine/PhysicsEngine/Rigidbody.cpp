@@ -7,3 +7,8 @@
 //
 
 #include "Rigidbody.h"
+
+Rigidbody::Rigidbody()
+{
+	mass = 1;
+}
