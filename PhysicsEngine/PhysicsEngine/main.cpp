@@ -165,7 +165,6 @@ void game_loop(void)
     while( playing && glfwGetWindowParam( GLFW_OPENED ) )
     {
         Time::update(glfwGetTime());
-
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )

@@ -9,6 +9,7 @@
 #include "Time.h"
 
 double Time::time = 0;
+double Time::deltaTime = 0;
 
 void Time::update(double currentTime)
 {
