@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -21,6 +20,7 @@
 #include "matrix_transform.hpp"
 #include "type_ptr.hpp"
 #include "GameObject.h"
+#include "Time.h"
 
 int WindowWidth = 800, WindowHeight = 450;
 
@@ -46,7 +46,6 @@ GLuint
 	
 
 float CubeRotation = 0;
-double LastTime = 0, DeltaTime = 0, Now = 0; //Not floats! We may need the resolution!
 
 std::vector<GameObject*> gameObjects;
 
@@ -157,19 +156,13 @@ void InitWindow(void)
     glfwEnable(GLFW_STICKY_KEYS);
 }
 
-void game_loop(void){
+void game_loop(void)
+{
     int playing;
     playing = GL_TRUE;
     while( playing && glfwGetWindowParam( GLFW_OPENED ) )
-    {   
-		Now = glfwGetTime();
-		DeltaTime = LastTime - Now;
-
-		if (LastTime == 0)
-			LastTime = Now;
-	
-		LastTime = Now;
-
+    {
+        Time::update(glfwGetTime());
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )
@@ -201,8 +194,6 @@ void CollisionResponse()
 
 void CreateCube()
 {
-   	printf("Create\n");
-
 	//Create all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{

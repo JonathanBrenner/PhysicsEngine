@@ -227,7 +227,7 @@ GLuint GameObject::LoadShader(const char* filename, GLenum shader_type)
 void GameObject::Create(GLuint shaderProgramID1)
 {
 	shaderProgramID = glCreateProgram();
-    printf("%d\n",shaderProgramID);
+    
     OnGLError("ERROR: Could not create the shader program");
 	
 	fragmentShaderID = LoadShader("container.fs", GL_FRAGMENT_SHADER);
@@ -311,7 +311,6 @@ void GameObject::Create(GLuint shaderProgramID1)
     glGenerateMipmap(GL_TEXTURE_2D);
     samplerLoc = glGetUniformLocation(shaderProgramID, "s_tex");
 
-	//std::cout << samplerLoc << std::endl;
 	glUniform1i(samplerLoc, 0);
 }
 
@@ -332,7 +331,7 @@ void GameObject::Draw()
 	glBindVertexArray(vaoID);
     OnGLError("ERROR: Could not bind the VAO for drawing purposes");
 
-	glDrawElements(GL_TRIANGLES, sizeof(indices[0]) * indices.size()/sizeof(GLuint), GL_UNSIGNED_INT, (GLvoid*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)(sizeof(indices[0]) * indices.size() / sizeof(GLuint)), GL_UNSIGNED_INT, (GLvoid*)0);
 
 	glBindVertexArray(vaoID);
 	glUseProgram(shaderProgramID);
