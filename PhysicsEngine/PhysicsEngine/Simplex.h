@@ -10,24 +10,23 @@
 #define __PhysicsEngine__Simplex__
 
 #include <iostream>
-#include <vector>
-#include "PhysicsVector.h"
+#include <list>
+#include "glm.hpp"
 
 class Simplex
 {
 public:
     Simplex();
+	//Simplex(glm::vec3[] newVertices);
 
-    void Add(PhysicsVector point);
-    void Remove(PhysicsVector point);
-    
-    PhysicsVector GetLast();
-    PhysicsVector GetA();
-    PhysicsVector GetB();
-    
-    int Size();
+	//glm::vec3 this[int i];
+
+	void add(glm::vec3 vertex);
+	void remove(glm::vec3 vertex);
+
+    int count();
     
 private:
-    std::vector<PhysicsVector> vertices;
+	std::list<glm::vec3> vertices;
 };
 #endif /* defined(__PhysicsEngine__Simplex__) */

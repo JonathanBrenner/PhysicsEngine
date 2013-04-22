@@ -21,6 +21,7 @@
 #include "type_ptr.hpp"
 #include "GameObject.h"
 #include "Time.h"
+#include "Simplex.h"
 
 int WindowWidth = 800, WindowHeight = 450;
 
@@ -58,7 +59,7 @@ void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
-void CollisionDetection();
+bool CollisionDetection();
 void CollisionResponse();
 
 
@@ -181,10 +182,9 @@ void game_loop(void)
 }
 
 // I'll do my thing here
-void CollisionDetection()
+bool CollisionDetection()
 {
-	// GJKing it up
-
+	return true;
 }
 
 // Do your thing here
