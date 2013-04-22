@@ -22,7 +22,7 @@
 #include "GameObject.h"
 #include "Time.h"
 
-int WindowWidth = 800, WindowHeight = 450;
+int WindowWidth = 1680, WindowHeight = 1050;
 
 //specify the "camera"
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
@@ -128,6 +128,14 @@ void Initialize(int argc, char* argv[])
 	GameObject* object2 = new GameObject("container.obj", 2);
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
+    
+    Rigidbody rgdbdy = Rigidbody();
+    object1->addRigidBody(rgdbdy);
+    object1->rigidbody.velocity = glm::vec3(1.5, 0, 0);
+    object1->rigidbody.forceApplied = glm::vec3(-1, 0, 0);
+    object1->rigidbody.enabled = true;
+    
+    std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
 
     CreateCube();
 }
@@ -145,7 +153,7 @@ void InitWindow(void)
     glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
     glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	
-	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_WINDOW ) )
+	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_FULLSCREEN ) )
     {
         fprintf( stderr, "Failed to open GLFW window\n" );
         glfwTerminate();
@@ -162,7 +170,17 @@ void game_loop(void)
     playing = GL_TRUE;
     while( playing && glfwGetWindowParam( GLFW_OPENED ) )
     {
+        // Update our time and delta time using GLFW
         Time::update(glfwGetTime());
+        
+        for (int i = 0; i < gameObjects.size(); i++)
+        {
+            if (gameObjects[i]->rigidbody.enabled)
+            {
+                gameObjects[i]->rigidbody.update();
+            }
+        }
+        
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )
@@ -197,7 +215,7 @@ void CreateCube()
 	//Create all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
-		gameObjects[i]->Create(shaderProgramID);
+		gameObjects[i]->create(shaderProgramID);
 	}
 }
 
@@ -209,13 +227,13 @@ void DrawCube(void)
 	//Update all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
-		gameObjects[i]->UpdateModelMatrix();
+		gameObjects[i]->updateModelMatrix();
 	}
 
 	//Draw all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
-		gameObjects[i]->Draw();
+		gameObjects[i]->draw();
 	}
 }
 

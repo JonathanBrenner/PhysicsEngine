@@ -33,12 +33,13 @@ public:
     GameObject(const GameObject& orig);
 	~GameObject();
 
-	void Create(GLuint shaderProgramID1);
-	void UpdateModelMatrix();
-	void Draw();
+	void create(GLuint shaderProgramID1);
+	void updateModelMatrix();
+	void draw();
+    void addRigidBody(Rigidbody& rigidbody);
 
-	void OnGLError(const char* error_message);
-	GLuint LoadShader(const char* filename, GLenum shader_type);
+	void onGLError(const char* error_message);
+	GLuint loadShader(const char* filename, GLenum shader_type);
 
     Transform transform;
     Rigidbody rigidbody;
