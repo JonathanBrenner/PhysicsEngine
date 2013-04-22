@@ -17,15 +17,15 @@ class Transform
 {
 public:
     glm::vec3 position;
-    
+    glm::mat4 modelMatrix;
+
 	Transform();
 
     void translate(float x, float y, float z);
-    
+    void translate(glm::vec3);
     // Rotate using Euler angles
     void rotate(float x, float y, float z);
-
-	glm::mat4 modelMatrix;
+    void update();
 
 private:
 };

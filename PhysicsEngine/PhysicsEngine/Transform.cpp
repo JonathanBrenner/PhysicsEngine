@@ -13,9 +13,21 @@ Transform::Transform()
 	modelMatrix = glm::mat4(1.0f);
 }
 
+void Transform::update()
+{
+    position.x = modelMatrix[0][3];
+    position.y = modelMatrix[1][3];
+    position.z = modelMatrix[2][3];
+}
+
 void Transform::translate(float x, float y, float z)
 {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+}
+
+void Transform::translate(glm::vec3 translation)
+{
+    modelMatrix = glm::translate(modelMatrix, translation);
 }
 
 void Transform::rotate(float x, float y, float z)
