@@ -11,23 +11,23 @@
 
 #include <iostream>
 #include <vector>
-#include "PhysicsVector.h"
+#include "glm.hpp"
 
 class Simplex
 {
 public:
     Simplex();
+	Simplex(std::vector<glm::vec3> newVertices);
+	Simplex(glm::vec3 copyVertex);
 
-    void Add(PhysicsVector point);
-    void Remove(PhysicsVector point);
-    
-    PhysicsVector GetLast();
-    PhysicsVector GetA();
-    PhysicsVector GetB();
-    
-    int Size();
+	void add(glm::vec3 vertex);
+	void remove(glm::vec3 vertex);
+	void print();
+
+	glm::vec3 get(int i);
+    int count();
     
 private:
-    std::vector<PhysicsVector> vertices;
+	std::vector<glm::vec3> vertices;
 };
 #endif /* defined(__PhysicsEngine__Simplex__) */

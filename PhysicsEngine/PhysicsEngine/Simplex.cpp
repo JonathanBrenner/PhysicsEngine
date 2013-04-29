@@ -12,38 +12,54 @@ Simplex::Simplex()
 {
 }
 
-void Simplex::Add(PhysicsVector point)
+Simplex::Simplex(std::vector<glm::vec3> newVertices)
 {
-    vertices.push_back(point);
-}
-
-void Simplex::Remove(PhysicsVector point)
-{
-    for(int i = 0; i < vertices.size(); i++)
+    for (int i = 0; i < newVertices.size(); i++)
     {
-        if(vertices[i].x == point.x && vertices[i].y == point.y && vertices[i].z == point.z)
-        {
-            vertices.erase(vertices.begin() + i - 1 , vertices.begin() + i);
-        }
+        vertices.push_back(newVertices[i]);
     }
 }
 
-PhysicsVector Simplex::GetLast()
+Simplex::Simplex(glm::vec3 newVertex)
 {
-    return vertices[vertices.size() - 1];
+	vertices.clear();
+	vertices.push_back(newVertex);
 }
 
-PhysicsVector Simplex::GetA()
-{
-    return vertices[0];
-}
-
-PhysicsVector Simplex::GetB()
-{
-    return vertices[1];
-}
-
-int Simplex::Size()
+int Simplex::count()
 {
     return vertices.size();
+}
+ 
+glm::vec3 Simplex::get(int i)
+{
+    return vertices[i];
+}
+       
+void Simplex::add(glm::vec3 vertex)
+{
+	//std::cout << "adding " << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
+    vertices.push_back(vertex);
+}
+ 
+void Simplex::remove(glm::vec3 vertex)
+{
+	//std::cout << "removing" << std::endl;
+	for(int i = 0; i < vertices.size(); i++)
+	{
+		if(vertices[i].x == vertex.x && vertices[i].y == vertex.y && vertices[i].z == vertex.z)
+		{
+			//std::cout << "erasing " << std::endl;
+			vertices.erase(vertices.begin() + i, vertices.begin() + i + 1);
+			break;
+		}
+	}
+}
+
+void Simplex::print()
+{
+	for(int i = 0; i < vertices.size(); i++)
+	{
+		std::cout << vertices[i].x << " " << vertices[i].y << " " << vertices[i].z << std::endl;
+	}
 }

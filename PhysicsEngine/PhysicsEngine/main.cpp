@@ -21,6 +21,8 @@
 #include "type_ptr.hpp"
 #include "GameObject.h"
 #include "Time.h"
+#include "Simplex.h"
+#include "CollisionDetection.h"
 
 int WindowWidth = 840, WindowHeight = 525;
 
@@ -58,7 +60,7 @@ void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
-void CollisionDetection();
+bool CollisionDetection();
 void CollisionResponse();
 
 
@@ -129,6 +131,7 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
     
+
     Rigidbody rgdbdy = Rigidbody();
     object1->addRigidbody(rgdbdy);
     object1->rigidbody.velocity = glm::vec3(1.5, 0, 0);
@@ -174,12 +177,18 @@ void game_loop(void)
         
         for (int i = 0; i < gameObjects.size(); i++)
         {
-            if (gameObjects[i]->rigidbody.enabled)
-            {
-                gameObjects[i]->rigidbody.update();
-            }
+			gameObjects[i]->update();
         }
-        
+
+		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
+		{
+			std::cout << "Yes\n";
+		}
+		else
+		{
+			std::cout << "No\n";
+		}
+
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )
@@ -198,10 +207,9 @@ void game_loop(void)
 }
 
 // I'll do my thing here
-void CollisionDetection()
+bool CollisionDetection()
 {
-	// GJKing it up
-
+	return true;
 }
 
 // Do your thing here
