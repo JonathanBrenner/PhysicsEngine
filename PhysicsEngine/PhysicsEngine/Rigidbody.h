@@ -10,9 +10,12 @@
 #define __PhysicsEngine__Rigidbody__
 
 #include <iostream>
+#include <vector>
 #include "glm.hpp"
+#include "quaternion.hpp"
 #include "Transform.h"
 #include "Time.h"
+#include "CollisionPoint.h"
 
 class GameObject;
 
@@ -22,12 +25,23 @@ public:
 	Rigidbody();
     
     void update();
+    void onCollision(std::vector<CollisionPoint> collisionPoints);
     
     GameObject* gameObject;
-
+    
+    // Linear dynamics
     glm::vec3 velocity;
     glm::vec3 forceApplied;
-    float mass;             // kilograms
+    float mass;
+    
+    // Angular dynamics
+    glm::mat3 momentOfInertia;
+    glm::quat orientation;
+    glm::vec3 angularVelocity;
+    glm::vec3 displacement;
+    glm::vec3 torque;
+    glm::vec3 angularMomentum;
+    
     bool enabled;
 
 private:
@@ -45,9 +59,6 @@ private:
 
     Derivative evaluate(const State& initial, float t, float dt, const Derivative& d);
     void integrate(State& state, float t, float dt);
-
-    glm::vec3 dPosition;
-    glm::vec3 dVelocity;
 };
 
 #endif /* defined(__PhysicsEngine__Rigidbody__) */

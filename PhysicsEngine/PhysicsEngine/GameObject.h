@@ -36,7 +36,7 @@ public:
 	void create(GLuint shaderProgramID1);
 	void updateModelMatrix();
 	void draw();
-    void addRigidBody(Rigidbody& rigidbody);
+    void addRigidbody(Rigidbody& rigidbody);
 
 	void onGLError(const char* error_message);
 	GLuint loadShader(const char* filename, GLenum shader_type);

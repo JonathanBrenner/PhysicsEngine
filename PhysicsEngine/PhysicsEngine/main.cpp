@@ -22,7 +22,7 @@
 #include "GameObject.h"
 #include "Time.h"
 
-int WindowWidth = 1680, WindowHeight = 1050;
+int WindowWidth = 840, WindowHeight = 525;
 
 //specify the "camera"
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
@@ -130,12 +130,11 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object2);
     
     Rigidbody rgdbdy = Rigidbody();
-    object1->addRigidBody(rgdbdy);
+    object1->addRigidbody(rgdbdy);
     object1->rigidbody.velocity = glm::vec3(1.5, 0, 0);
     object1->rigidbody.forceApplied = glm::vec3(-1, 0, 0);
     object1->rigidbody.enabled = true;
-    
-    std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
+    object1->transform.translate(1, 0, 0);
 
     CreateCube();
 }
@@ -153,7 +152,7 @@ void InitWindow(void)
     glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
     glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	
-	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_FULLSCREEN ) )
+	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_WINDOW ) )
     {
         fprintf( stderr, "Failed to open GLFW window\n" );
         glfwTerminate();

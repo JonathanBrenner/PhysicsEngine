@@ -15,9 +15,9 @@ Transform::Transform()
 
 void Transform::update()
 {
-    position.x = modelMatrix[0][3];
-    position.y = modelMatrix[1][3];
-    position.z = modelMatrix[2][3];
+    position.x = modelMatrix[3][0];
+    position.y = modelMatrix[3][1];
+    position.z = modelMatrix[3][2];
 }
 
 void Transform::translate(float x, float y, float z)
@@ -32,7 +32,7 @@ void Transform::translate(glm::vec3 translation)
 
 void Transform::rotate(float x, float y, float z)
 {
-    modelMatrix = glm::rotate(modelMatrix, z, glm::vec3(0, 0, z));
-    modelMatrix = glm::rotate(modelMatrix, x, glm::vec3(x, 0, 0));
-    modelMatrix = glm::rotate(modelMatrix, y, glm::vec3(0, y, 0));
+    modelMatrix = glm::rotate(modelMatrix, z, glm::vec3(0, 0, 1));
+    modelMatrix = glm::rotate(modelMatrix, x, glm::vec3(1, 0, 0));
+    modelMatrix = glm::rotate(modelMatrix, y, glm::vec3(0, 1, 0));
 }

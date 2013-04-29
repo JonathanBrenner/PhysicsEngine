@@ -26,6 +26,14 @@ void Rigidbody::update()
     glm::vec3 translation = state.position - gameObject->transform.position;
     velocity = state.velocity;
     gameObject->transform.translate(translation);
+    
+    orientation = glm::quat_cast(gameObject->transform.modelMatrix);
+    //std::cout << orientation.x << ", " << orientation.y << ", " << orientation.z << ", " << orientation.w << std::endl;
+}
+
+void Rigidbody::onCollision(std::vector<CollisionPoint> collisionPoints)
+{
+    
 }
 
 Rigidbody::Derivative Rigidbody::evaluate(const Rigidbody::State &initial, float t, float dt, const Rigidbody::Derivative &d)

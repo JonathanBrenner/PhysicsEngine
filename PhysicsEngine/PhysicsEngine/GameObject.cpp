@@ -358,7 +358,7 @@ void GameObject::onGLError(const char* error_message)
 	}
 }
 
-void GameObject::addRigidBody(Rigidbody& rigidbody)
+void GameObject::addRigidbody(Rigidbody& rigidbody)
 {
     rigidbody.gameObject = this;
     this->rigidbody = rigidbody;
