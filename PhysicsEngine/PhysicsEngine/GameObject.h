@@ -16,6 +16,7 @@
 #include <sstream>
 #include "Transform.h"
 #include "Rigidbody.h"
+#include "IConvexRegion.h"
 #include "Vertex.h"
 #include "UV.h"
 #include "Normal.h"
@@ -35,6 +36,7 @@ public:
 
 	void create(GLuint shaderProgramID1);
 	void updateModelMatrix();
+	void update();
 	void draw();
     void addRigidBody(Rigidbody& rigidbody);
 
@@ -43,6 +45,7 @@ public:
 
     Transform transform;
     Rigidbody rigidbody;
+	IConvexRegion collider;
 	std::vector<Vertex> vertices;
 
 private:

@@ -22,8 +22,9 @@
 #include "GameObject.h"
 #include "Time.h"
 #include "Simplex.h"
+#include "CollisionDetection.h"
 
-int WindowWidth = 1680, WindowHeight = 1050;
+int WindowWidth = 800, WindowHeight = 600;
 
 //specify the "camera"
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
@@ -130,13 +131,20 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
     
+
     Rigidbody rgdbdy = Rigidbody();
     object1->addRigidBody(rgdbdy);
-    object1->rigidbody.velocity = glm::vec3(1.5, 0, 0);
-    object1->rigidbody.forceApplied = glm::vec3(-1, 0, 0);
+	object1->transform.translate(.0, .0, .0);
+	object1->rigidbody.velocity = glm::vec3(.03, 0, 0);
+    //object1->rigidbody.forceApplied = glm::vec3(-.3, 0, 0);
     object1->rigidbody.enabled = true;
-    
-    std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
+
+	//Rigidbody rgbdy2 = Rigidbody();
+	//object2->addRigidBody(rgbdy2);
+	//object2->transform.translate(-1.0, 0.0, 0.0);
+	//object2->rigidbody.enabled = true;
+
+    //std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
 
     CreateCube();
 }
@@ -154,7 +162,7 @@ void InitWindow(void)
     glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
     glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	
-	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_FULLSCREEN ) )
+	if( !glfwOpenWindow( WindowWidth, WindowHeight, 0,0,0,0, 16,0, GLFW_WINDOW ) )
     {
         fprintf( stderr, "Failed to open GLFW window\n" );
         glfwTerminate();
@@ -176,12 +184,18 @@ void game_loop(void)
         
         for (int i = 0; i < gameObjects.size(); i++)
         {
-            if (gameObjects[i]->rigidbody.enabled)
-            {
-                gameObjects[i]->rigidbody.update();
-            }
+			gameObjects[i]->update();
         }
-        
+
+		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
+		{
+			std::cout << "Yes\n";
+		}
+		else
+		{
+			std::cout << "No\n";
+		}
+
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )

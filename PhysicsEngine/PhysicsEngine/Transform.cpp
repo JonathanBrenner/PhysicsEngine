@@ -15,9 +15,9 @@ Transform::Transform()
 
 void Transform::update()
 {
-    position.x = modelMatrix[0][3];
-    position.y = modelMatrix[1][3];
-    position.z = modelMatrix[2][3];
+    position.x = modelMatrix[3][0];
+    position.y = modelMatrix[3][1];
+    position.z = modelMatrix[3][2];
 }
 
 void Transform::translate(float x, float y, float z)

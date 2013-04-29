@@ -14,6 +14,10 @@ GameObject::GameObject()
 
 GameObject::GameObject(std::string pathName, int index)
 {
+	glm::vec3 zero(0, 0, 0);
+	collider = IConvexRegion(zero, 1);
+	collider.parent = this;
+
 	viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 2.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	lightMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 5.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	projectionMatrix = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.f); 
@@ -306,7 +310,7 @@ void GameObject::create(GLuint shaderProgramID1)
     // Upload texture from file to texture memory, auto-uses glTexImage2D, needs TGA
     if( !glfwLoadTexture2D( "container_diffuse.tga", 0 ) )
         fprintf( stderr, "Failed to load texture" );
-        
+    
     // since we're using mipmapping for the minification filter, we should tell texture unit to generate mipmaps
     glGenerateMipmap(GL_TEXTURE_2D);
     samplerLoc = glGetUniformLocation(shaderProgramID, "s_tex");
@@ -324,6 +328,16 @@ void GameObject::updateModelMatrix()
 	glUniformMatrix4fv(projectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(lightMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(lightMatrix));
     onGLError("ERROR: Could not set the shader uniforms");
+}
+
+void GameObject::update()
+{
+	if(rigidbody.enabled)
+	{
+		rigidbody.update();
+	}
+	transform.update();
+	collider.center = transform.position;
 }
 
 void GameObject::draw()
