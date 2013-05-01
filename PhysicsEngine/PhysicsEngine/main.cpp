@@ -24,7 +24,7 @@
 #include "Simplex.h"
 #include "CollisionDetection.h"
 
-int WindowWidth = 840, WindowHeight = 525;
+int WindowWidth = 800, WindowHeight = 600;
 
 //specify the "camera"
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
@@ -131,13 +131,20 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
     
-
-    Rigidbody rgdbdy = Rigidbody();
+    Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
     object1->addRigidbody(rgdbdy);
-    object1->rigidbody.velocity = glm::vec3(1.5, 0, 0);
-    object1->rigidbody.forceApplied = glm::vec3(-1, 0, 0);
+	//object1->transform.translate(1, 0, 0);
+	//object1->rigidbody.momentum = glm::vec3(.03, 0, 0);
+    object1->rigidbody.force = glm::vec3(-.01, 0, 0);
+    object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
     object1->rigidbody.enabled = true;
-    object1->transform.translate(1, 0, 0);
+
+	//Rigidbody rgbdy2 = Rigidbody();
+	//object2->addRigidBody(rgbdy2);
+	//object2->transform.translate(-1.0, 0.0, 0.0);
+	//object2->rigidbody.enabled = true;
+
+    //std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
 
     CreateCube();
 }
@@ -182,11 +189,11 @@ void game_loop(void)
 
 		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
 		{
-			std::cout << "Yes\n";
+			//std::cout << "Yes\n";
 		}
 		else
 		{
-			std::cout << "No\n";
+			//std::cout << "No\n";
 		}
 
         //Key events

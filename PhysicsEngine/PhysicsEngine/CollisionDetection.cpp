@@ -67,8 +67,8 @@ bool CollisionDetection::processLine(Simplex &simplex, glm::vec3 &direction)
  
     if (glm::dot(ab, aO) > 0)
     {
-        float dot = glm::dot(ab, aO);
-		float angle = (float)acos(dot / (glm::length(ab) * glm::length(aO)));
+        //float dot = glm::dot(ab, aO);
+		//float angle = (float)acos(dot / (glm::length(ab) * glm::length(aO)));
 		direction = glm::cross(glm::cross(ab, aO), ab);
     }
     else
@@ -156,8 +156,8 @@ bool CollisionDetection::processTetrehedron(Simplex &simplex, glm::vec3 &directi
     glm::vec3 ac = c - a;
     glm::vec3 ad = d - a;
     glm::vec3 ab = b - a;
-    glm::vec3 bc = c - b;
-    glm::vec3 bd = d - b;
+    //glm::vec3 bc = c - b;
+    //glm::vec3 bd = d - b;
              
     //glm::vec3 acd = glm::cross(ad, ac);
 	glm::vec3 acd = glm::cross(ac, ad);

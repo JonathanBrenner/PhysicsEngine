@@ -28,7 +28,7 @@ Simplex::Simplex(glm::vec3 newVertex)
 
 int Simplex::count()
 {
-    return vertices.size();
+    return (int)vertices.size();
 }
  
 glm::vec3 Simplex::get(int i)

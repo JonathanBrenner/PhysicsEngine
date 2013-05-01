@@ -332,7 +332,7 @@ void GameObject::updateModelMatrix()
 
 void GameObject::update()
 {
-	if(rigidbody.enabled)
+	if (rigidbody.enabled)
 	{
 		rigidbody.update();
 	}

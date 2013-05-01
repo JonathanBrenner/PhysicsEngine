@@ -36,3 +36,8 @@ void Transform::rotate(float x, float y, float z)
     modelMatrix = glm::rotate(modelMatrix, x, glm::vec3(1, 0, 0));
     modelMatrix = glm::rotate(modelMatrix, y, glm::vec3(0, 1, 0));
 }
+
+void Transform::rotate(glm::quat quaternion)
+{
+    modelMatrix = glm::mat4_cast(glm::normalize(quaternion)) * modelMatrix;
+}
