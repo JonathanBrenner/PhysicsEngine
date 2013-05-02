@@ -31,6 +31,8 @@ public:
     
     GameObject* gameObject;
     
+    float elasticity;
+    
     // Solid Cuboid inertia tensor
     float width;
     float height;
