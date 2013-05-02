@@ -15,20 +15,19 @@ Transform::Transform()
 
 void Transform::update()
 {
-    position.x = modelMatrix[3][0];
-    position.y = modelMatrix[3][1];
-    position.z = modelMatrix[3][2];
-    //std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
+    updatePosition();
 }
 
 void Transform::translate(float x, float y, float z)
 {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+    updatePosition();
 }
 
 void Transform::translate(glm::vec3 translation)
 {
     modelMatrix = glm::translate(modelMatrix, translation);
+    updatePosition();
 }
 
 void Transform::rotate(float x, float y, float z)
@@ -41,4 +40,11 @@ void Transform::rotate(float x, float y, float z)
 void Transform::rotate(glm::quat quaternion)
 {
     modelMatrix = glm::mat4_cast(glm::normalize(quaternion)) * modelMatrix;
+}
+
+void Transform::updatePosition()
+{
+    position.x = modelMatrix[3][0];
+    position.y = modelMatrix[3][1];
+    position.z = modelMatrix[3][2];
 }

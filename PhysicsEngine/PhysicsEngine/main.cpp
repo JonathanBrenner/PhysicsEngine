@@ -126,7 +126,7 @@ void Initialize(int argc, char* argv[])
 	OnGLError("Front face");
     
 	GameObject* object1 = new GameObject("container.obj", 1);
-	//GameObject* object2 = new GameObject("cuboid.obj", 2);
+	GameObject* object2 = new GameObject("cuboid.obj", 2);
 	gameObjects.push_back(object1);
 	//gameObjects.push_back(object2);
     
@@ -197,26 +197,32 @@ void game_loop(void)
 //			//std::cout << "No\n";
 //		}
 
+		CollisionDetection();
+
         //Key events
         // Did the user press ESC?
         if( glfwGetKey( GLFW_KEY_ESC ) )
         {
             playing = GL_FALSE;
         }
-       
-		//Collision
-		CollisionDetection();
-        
+
         // Display
         DrawCube();
         glfwSwapBuffers();
     }
 }
 
-// I'll do my thing here
-bool CollisionDetection()
+// Check collisions against all of the objects
+void CollisionDetection()
 {
-	return true;
+	for(int i = 0; i < gameObjects.size(); i++)
+	{
+		for(int j = i + 1; j < gameObjects.size(); j++)
+		{
+			glm::vec3 answer = CollisionDetection::intersects(gameObjects[i]->collider, gameObjects[j]->collider);
+			std::cout << answer.x << " " << answer.y << " " << answer.z << std::endl;
+		}
+	}
 }
 
 void CreateCube()
