@@ -21,37 +21,33 @@ IConvexRegion::IConvexRegion(glm::vec3 newCenter, float newRadius)
  
 glm::vec3 IConvexRegion::getFurthestPoint(glm::vec3 direction)
 {
-	/*glm::vec3 zero;
-	zero.x = 0;
-	zero.y = 0;
-	zero.z = 0;
-    if (direction != zero)
-    {
-		direction = glm::normalize(direction);
-    }
-    return center + radius * direction;*/
-	glm::vec3 temp;
-	temp.x = parent->vertices[0].position[0] + parent->transform.position.x;
-	temp.y = parent->vertices[0].position[1] + parent->transform.position.y;
-	temp.z = parent->vertices[0].position[2] + parent->transform.position.z;
+	glm::vec4 temp(parent->vertices[0].position[0], parent->vertices[0].position[1], parent->vertices[0].position[2], 1);
+	glm::mat4x4 model = glm::transpose(parent->transform.modelMatrix);
+	temp = temp * model;
+	
+	glm::vec4 newDirection(direction.x, direction.y, direction.z, 0);
 
-	float max = glm::dot(temp, direction);
+	float max = glm::dot(temp, newDirection);
     int index = 0;
     for (int i = 1; i < parent->vertices.size(); i++)
     {
-		temp.x = parent->vertices[i].position[0] + parent->transform.position.x;
-		temp.y = parent->vertices[i].position[1] + parent->transform.position.y;
-		temp.z = parent->vertices[i].position[2] + parent->transform.position.z;
-        float dot = glm::dot(temp, direction);
+		temp.x = parent->vertices[i].position[0];
+		temp.y = parent->vertices[i].position[1];
+		temp.z = parent->vertices[i].position[2];
+		temp = temp * model;
+
+        float dot = glm::dot(temp, newDirection);
         if (dot > max)
         {
             max = dot;
             index = i;
         }
     }
-	temp.x = parent->vertices[index].position[0] + parent->transform.position.x;
-	temp.y = parent->vertices[index].position[1] + parent->transform.position.y;
-	temp.z = parent->vertices[index].position[2] + parent->transform.position.z;
-	//std::cout << temp.x << " " << temp.y << " " << temp.z << std::endl;
-    return temp;
+	temp.x = parent->vertices[index].position[0];
+	temp.y = parent->vertices[index].position[1];
+	temp.z = parent->vertices[index].position[2];
+	temp = temp * model;
+
+	glm::vec3 answer(temp.x, temp.y, temp.z);
+    return answer;
 }

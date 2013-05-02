@@ -60,8 +60,7 @@ void game_loop(void);
 void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
-bool CollisionDetection();
-void CollisionResponse();
+void CollisionDetection();
 
 
 int main(int argc, char* argv[])
@@ -134,15 +133,17 @@ void Initialize(int argc, char* argv[])
 
     Rigidbody rgdbdy = Rigidbody();
     object1->addRigidBody(rgdbdy);
-	object1->transform.translate(.0, .0, .0);
-	object1->rigidbody.velocity = glm::vec3(.03, 0, 0);
+	object1->transform.translate(1.5, .0, .0);
+	object1->rigidbody.velocity = glm::vec3(-.04, 0, 0);
+	object1->transform.rotate(60, 60, 60);
     //object1->rigidbody.forceApplied = glm::vec3(-.3, 0, 0);
     object1->rigidbody.enabled = true;
 
-	//Rigidbody rgbdy2 = Rigidbody();
-	//object2->addRigidBody(rgbdy2);
+	Rigidbody rgbdy2 = Rigidbody();
+	object2->addRigidBody(rgbdy2);
+	object2->transform.rotate(60, 60, 60);
 	//object2->transform.translate(-1.0, 0.0, 0.0);
-	//object2->rigidbody.enabled = true;
+	object2->rigidbody.enabled = true;
 
     //std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
 
@@ -187,14 +188,8 @@ void game_loop(void)
 			gameObjects[i]->update();
         }
 
-		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
-		{
-			std::cout << "Yes\n";
-		}
-		else
-		{
-			std::cout << "No\n";
-		}
+
+		CollisionDetection();
 
         //Key events
         // Did the user press ESC?
@@ -202,10 +197,6 @@ void game_loop(void)
         {
             playing = GL_FALSE;
         }
-       
-		//Collision
-		CollisionDetection();
-		CollisionResponse();
 
         // Display
         DrawCube();
@@ -213,15 +204,17 @@ void game_loop(void)
     }
 }
 
-// I'll do my thing here
-bool CollisionDetection()
+// Check collisions against all of the objects
+void CollisionDetection()
 {
-	return true;
-}
-
-// Do your thing here
-void CollisionResponse()
-{
+	for(int i = 0; i < gameObjects.size(); i++)
+	{
+		for(int j = i + 1; j < gameObjects.size(); j++)
+		{
+			glm::vec3 answer = CollisionDetection::intersects(gameObjects[i]->collider, gameObjects[j]->collider);
+			std::cout << answer.x << " " << answer.y << " " << answer.z << std::endl;
+		}
+	}
 }
 
 void CreateCube()
