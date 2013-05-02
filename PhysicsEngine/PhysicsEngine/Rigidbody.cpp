@@ -29,6 +29,7 @@ void Rigidbody::init()
 {
     enabled = false;
 	mass = 1;
+    elasticity = 1;
     
     momentum = glm::vec3(0, 0, 0);
     force = glm::vec3(0, 0, 0);
@@ -64,10 +65,26 @@ void Rigidbody::onCollision(GameObject* other, CollisionPoint collisionPoint)
     glm::vec3 radialPosition;
     Rigidbody otherRigidbody = other->rigidbody;
     radialPosition = collisionPoint.position - gameObject->transform.position;
-        
+    
+    // Find the normal of the collision (approximating using the vector connecting the center of mass of both objects)
+    glm::vec3 collisionNormal = other->transform.position - gameObject->transform.position;
+    collisionNormal = glm::normalize(collisionNormal);
+    
+    // Find the velocity of both objects
+    glm::vec3 velocity = momentum / mass;
+    glm::vec3 otherVelocity = otherRigidbody.momentum / otherRigidbody.mass;
+    
+    // Calculate the change in momentum of this object after the collision
+    glm::vec3 momentumChange = ((1 + elasticity) * (glm::dot(otherVelocity, collisionNormal) - glm::dot(velocity, collisionNormal)) * collisionNormal) /
+        ((1 / mass) + (1 / otherRigidbody.mass));
+    
+    glm::vec3 angularMomentumChange;
+    
+    momentum += momentumChange;
+    
     /*** This force may not be in the correct coordinate space ***/
-    torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
-    force += otherRigidbody.getForce(true);
+    //torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
+    //force += otherRigidbody.getForce(true);
 }
 
 glm::vec3 Rigidbody::getForce(bool worldCoordinates)
@@ -75,7 +92,7 @@ glm::vec3 Rigidbody::getForce(bool worldCoordinates)
     if (worldCoordinates)
     {
         glm::vec4 forceVector4 = glm::vec4(force.x, force.y, force.z, 0);
-        forceVector4 = glm::inverse(gameObject->transform.modelMatrix) * forceVector4;
+        forceVector4 = gameObject->transform.modelMatrix * forceVector4;
         return glm::vec3(forceVector4.x, forceVector4.y, forceVector4.z);
     }
     else
