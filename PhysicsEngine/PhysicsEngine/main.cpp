@@ -131,12 +131,12 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object2);
     
 
-	Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
+	Rigidbody rgdbdy = Rigidbody();
     object1->addRigidbody(rgdbdy);
-	object1->transform.translate(10, 0, 0);
+	object1->transform.translate(1, 0, 0);
 	//object1->rigidbody.momentum = glm::vec3(.03, 0, 0);
-    object1->rigidbody.force = glm::vec3(-.005, 0, 0);
-    object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
+    //object1->rigidbody.force = glm::vec3(-.005, 0, 0);
+    //object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
     object1->rigidbody.enabled = true;
 
 	Rigidbody rgbdy2 = Rigidbody();
@@ -212,7 +212,9 @@ void CollisionDetection()
 		for(int j = i + 1; j < gameObjects.size(); j++)
 		{
 			glm::vec3 answer = CollisionDetection::intersects(gameObjects[i]->collider, gameObjects[j]->collider);
-			std::cout << answer.x << " " << answer.y << " " << answer.z << std::endl;
+
+			//if(answer.x != answer.null)
+			//	std::cout << answer.x << " " << answer.y << " " << answer.z << std::endl;
 		}
 	}
 }

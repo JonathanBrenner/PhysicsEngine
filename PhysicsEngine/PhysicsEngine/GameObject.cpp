@@ -337,7 +337,6 @@ void GameObject::update()
 		rigidbody.update();
 	}
 	transform.update();
-	collider.center = transform.position;
 }
 
 void GameObject::draw()

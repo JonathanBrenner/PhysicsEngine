@@ -97,7 +97,7 @@ glm::vec3 CollisionDetection::findCollisionPoint(Simplex simplex, Simplex A, Sim
 
 		glm::vec3 collision;
 		collision = lambda1 * A.get(0) + lambda2 * A.get(1) + lambda3 * A.get(2);
-		std::cout << "SIMPLEX SIZE OF THREE " << std::endl;
+		//std::cout << "SIMPLEX SIZE OF THREE " << std::endl;
 		return collision;
 	}
 	else if(simplex.count() == 2)
@@ -121,7 +121,7 @@ glm::vec3 CollisionDetection::findCollisionPoint(Simplex simplex, Simplex A, Sim
 
 		glm::vec3 collision;
 		collision = lambda1 * A.get(0) + lambda2 * A.get(1);
-		std::cout << "SIMPLEX SIZE OF TWO " << std::endl;
+		//std::cout << "SIMPLEX SIZE OF TWO " << std::endl;
 		return collision;
 	}
 
