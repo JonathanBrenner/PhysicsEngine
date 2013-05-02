@@ -212,7 +212,7 @@ void CollisionDetection()
 			if(answer.x != answer.null)
 			{
 				gameObjects[i]->rigidbody.onCollision(gameObjects[j], answer);
-				gameObjects[ij]->rigidbody.onCollision(gameObjects[i], answer);
+				gameObjects[j]->rigidbody.onCollision(gameObjects[i], answer);
 			}
 		}
 	}

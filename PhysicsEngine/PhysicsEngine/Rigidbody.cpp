@@ -64,11 +64,7 @@ void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
 {
     glm::vec3 radialPosition;
     Rigidbody otherRigidbody = other->rigidbody;
-<<<<<<< HEAD
     radialPosition = collisionPoint - gameObject->transform.position;
-        
-=======
-    radialPosition = collisionPoint.position - gameObject->transform.position;
     
     // Find the normal of the collision (approximating using the vector connecting the center of mass of both objects)
     glm::vec3 collisionNormal = other->transform.position - gameObject->transform.position;
@@ -86,7 +82,6 @@ void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
     
     momentum += momentumChange;
     
->>>>>>> 32bf147dd73b4054b0d4bb6ee20afb47d0dbaf76
     /*** This force may not be in the correct coordinate space ***/
     //torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
     //force += otherRigidbody.getForce(true);
