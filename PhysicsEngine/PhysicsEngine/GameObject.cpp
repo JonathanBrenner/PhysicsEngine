@@ -32,7 +32,7 @@ GameObject::GameObject(std::string pathName, int index)
 	UV tempUV;
 	Normal tempNormal;
 
-	std::ifstream data("container.obj");
+	std::ifstream data(pathName);
 	std::string line;
 
 	bool isVertex = false;
@@ -160,6 +160,7 @@ GameObject::GameObject(std::string pathName, int index)
 			}
 		}
     }
+    std::cout << vertices.size() << "\n";
 }
 
 GameObject::GameObject(const GameObject& orig)

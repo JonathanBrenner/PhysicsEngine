@@ -30,6 +30,7 @@ public:
     void update();
 
 private:
+    void updatePosition();
 };
 
 #endif /* defined(__PhysicsEngine__Transform__) */
