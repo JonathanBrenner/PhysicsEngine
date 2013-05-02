@@ -18,6 +18,7 @@ void Transform::update()
     position.x = modelMatrix[3][0];
     position.y = modelMatrix[3][1];
     position.z = modelMatrix[3][2];
+    //std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
 }
 
 void Transform::translate(float x, float y, float z)

@@ -7,5 +7,6 @@ out vec4 FragColor;
 
 void main(void)
 {
-	FragColor = texture(s_tex, v_tex);
+	//FragColor = texture(s_tex, v_tex);
+    FragColor = vec4(0.5, 0.5, 0.5, 1);
 }

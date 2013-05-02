@@ -67,6 +67,7 @@ void Rigidbody::onCollision(GameObject* other, CollisionPoint collisionPoint)
         
     /*** This force may not be in the correct coordinate space ***/
     torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
+    force += otherRigidbody.getForce(true);
 }
 
 glm::vec3 Rigidbody::getForce(bool worldCoordinates)

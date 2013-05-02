@@ -127,24 +127,24 @@ void Initialize(int argc, char* argv[])
 	OnGLError("Front face");
     
 	GameObject* object1 = new GameObject("container.obj", 1);
-	GameObject* object2 = new GameObject("container.obj", 2);
+	//GameObject* object2 = new GameObject("cuboid.obj", 2);
 	gameObjects.push_back(object1);
-	gameObjects.push_back(object2);
+	//gameObjects.push_back(object2);
     
     Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
     object1->addRigidbody(rgdbdy);
-	//object1->transform.translate(1, 0, 0);
-	//object1->rigidbody.momentum = glm::vec3(.03, 0, 0);
+    object1->transform.translate(5, 0, 0);
+	//object1->transform.translate(0, 0, -50);
+    //object2->transform.translate(10, 0, 0);
+	//object1->rigidbody.momentum = glm::vec3(0, 0, -0.5);
     object1->rigidbody.force = glm::vec3(-.01, 0, 0);
-    object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
+    //object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
     object1->rigidbody.enabled = true;
 
 	//Rigidbody rgbdy2 = Rigidbody();
 	//object2->addRigidBody(rgbdy2);
 	//object2->transform.translate(-1.0, 0.0, 0.0);
 	//object2->rigidbody.enabled = true;
-
-    //std::cout << object1->rigidbody.gameObject->vertices.size() << std::endl;
 
     CreateCube();
 }
@@ -187,14 +187,14 @@ void game_loop(void)
 			gameObjects[i]->update();
         }
 
-		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
-		{
-			//std::cout << "Yes\n";
-		}
-		else
-		{
-			//std::cout << "No\n";
-		}
+//		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
+//		{
+//			//std::cout << "Yes\n";
+//		}
+//		else
+//		{
+//			//std::cout << "No\n";
+//		}
 
         //Key events
         // Did the user press ESC?
@@ -205,8 +205,7 @@ void game_loop(void)
        
 		//Collision
 		CollisionDetection();
-		CollisionResponse();
-
+        
         // Display
         DrawCube();
         glfwSwapBuffers();
@@ -217,11 +216,6 @@ void game_loop(void)
 bool CollisionDetection()
 {
 	return true;
-}
-
-// Do your thing here
-void CollisionResponse()
-{
 }
 
 void CreateCube()
