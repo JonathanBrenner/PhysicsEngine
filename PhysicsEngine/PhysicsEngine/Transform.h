@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "glm.hpp"
+#include "quaternion.hpp"
 #include "matrix_transform.hpp"
 
 class Transform
@@ -25,6 +26,7 @@ public:
     void translate(glm::vec3);
     // Rotate using Euler angles
     void rotate(float x, float y, float z);
+    void rotate(glm::quat quaternion);
     void update();
 
 private:

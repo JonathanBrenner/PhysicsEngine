@@ -11,32 +11,89 @@
 
 Rigidbody::Rigidbody()
 {
+    init();
+}
+
+Rigidbody::Rigidbody(float width, float height, float depth)
+{
+    init();
+    this->width = width;
+    this->height = height;
+    this->depth = depth;
+    inertiaTensor[0][0] = mass * (height * height + depth * depth) / 12;
+    inertiaTensor[1][1] = mass * (width * width + depth * depth) / 12;
+    inertiaTensor[2][2] = mass * (height * height + width * width) / 12;
+}
+
+void Rigidbody::init()
+{
     enabled = false;
 	mass = 1;
-    velocity = glm::vec3(0, 0, 0);
-    forceApplied = glm::vec3(0, 0, 0);
+    
+    momentum = glm::vec3(0, 0, 0);
+    force = glm::vec3(0, 0, 0);
+    
+    angularMomentum = glm::vec3(0, 0, 0);
+    torque = glm::vec3(0, 0, 0);
+    orientation = glm::quat(0, 0, 0, 1);
+
 }
 
 void Rigidbody::update()
 {
+    // RK4 integration
     Rigidbody::State state;
     state.position = gameObject->transform.position;
-    state.velocity = velocity;
+    state.momentum = momentum;
+    state.orientation = orientation;
+    state.angularMomentum = angularMomentum;
+    
     integrate(state, Time::time, Time::deltaTime);
-    glm::vec3 translation = state.position - gameObject->transform.position;
-    velocity = state.velocity;
-    gameObject->transform.translate(translation);
+    
+    momentum = state.momentum;
+    orientation = state.orientation;
+    angularMomentum = state.angularMomentum;
+    
+    // Update Model matrix
+    glm::mat4 newModelMatrix = glm::translate(glm::mat4(), state.position) * glm::mat4_cast(orientation);
+    gameObject->transform.modelMatrix = newModelMatrix;
 }
 
-Rigidbody::Derivative Rigidbody::evaluate(const Rigidbody::State &initial, float t, float dt, const Rigidbody::Derivative &d)
+void Rigidbody::onCollision(GameObject* other, CollisionPoint collisionPoint)
 {
-    Rigidbody::State state;
-    state.position = initial.position + d.dPosition * dt;
-    state.velocity = initial.velocity + d.dVelocity * dt;
+    glm::vec3 radialPosition;
+    Rigidbody otherRigidbody = other->rigidbody;
+    radialPosition = collisionPoint.position - gameObject->transform.position;
+        
+    /*** This force may not be in the correct coordinate space ***/
+    torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
+}
+
+glm::vec3 Rigidbody::getForce(bool worldCoordinates)
+{
+    if (worldCoordinates)
+    {
+        glm::vec4 forceVector4 = glm::vec4(force.x, force.y, force.z, 0);
+        forceVector4 = glm::inverse(gameObject->transform.modelMatrix) * forceVector4;
+        return glm::vec3(forceVector4.x, forceVector4.y, forceVector4.z);
+    }
+    else
+    {
+        return force;
+    }
+}
+
+Rigidbody::Derivative Rigidbody::evaluate(Rigidbody::State& state, float t, float dt, const Rigidbody::Derivative &derivative)
+{
+    state.position = state.position + derivative.velocity * dt;
+    state.momentum = state.momentum + force * dt;
+    state.orientation = state.orientation + derivative.spin * dt;
+    state.angularMomentum = state.angularMomentum + torque * dt;
+    recalculate(state);
     
     Rigidbody::Derivative output;
-    output.dPosition = state.velocity;
-    output.dVelocity = forceApplied / mass;
+    output.velocity = state.velocity;
+    output.spin = state.spin;
     
     return output;
 }
@@ -48,9 +105,21 @@ void Rigidbody::integrate(State& state, float t, float dt)
     Derivative c = evaluate(state, t, dt * 0.5f, b);
     Derivative d = evaluate(state, t, dt, c);
 
-    const glm::vec3 dxdt = 1.0f / 6.0f * (a.dPosition + 2.0f * (b.dPosition + c.dPosition) + d.dPosition);
-    const glm::vec3 dvdt = 1.0f / 6.0f * (a.dVelocity + 2.0f * (b.dVelocity + c.dVelocity) + d.dVelocity);
-
-    state.position = state.position + dxdt * dt;
-    state.velocity = state.velocity + dvdt * dt;
+    state.position = state.position + 1.0f / 6.0f * (a.velocity + 2.0f * (b.velocity + c.velocity) + d.velocity) * dt;
+    state.momentum = state.momentum + force * dt;
+    state.orientation = state.orientation + 1.0f / 6.0f * (a.spin + 2.0f * (b.spin + c.spin) + d.spin) * dt;
+    state.angularMomentum = state.angularMomentum + torque * dt;
+    
+    recalculate(state);
 }
+
+void Rigidbody::recalculate(State& state)
+{
+    state.velocity = state.momentum / mass;    
+    glm::vec3 angularVelocityVector = state.angularMomentum * glm::inverse(inertiaTensor);
+    state.angularVelocity = glm::quat(0, angularVelocityVector.x, angularVelocityVector.y, angularVelocityVector.z);
+    state.orientation = glm::normalize(state.orientation);
+    state.spin = state.angularVelocity * state.orientation * Time::deltaTime / 2;
+}
+
+

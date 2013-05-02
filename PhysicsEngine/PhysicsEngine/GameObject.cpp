@@ -332,7 +332,7 @@ void GameObject::updateModelMatrix()
 
 void GameObject::update()
 {
-	if(rigidbody.enabled)
+	if (rigidbody.enabled)
 	{
 		rigidbody.update();
 	}
@@ -372,7 +372,7 @@ void GameObject::onGLError(const char* error_message)
 	}
 }
 
-void GameObject::addRigidBody(Rigidbody& rigidbody)
+void GameObject::addRigidbody(Rigidbody& rigidbody)
 {
     rigidbody.gameObject = this;
     this->rigidbody = rigidbody;

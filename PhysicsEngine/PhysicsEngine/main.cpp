@@ -131,16 +131,16 @@ void Initialize(int argc, char* argv[])
 	gameObjects.push_back(object2);
     
 
-    Rigidbody rgdbdy = Rigidbody();
-    object1->addRigidBody(rgdbdy);
-	object1->transform.translate(1.5, .0, .0);
-	object1->rigidbody.velocity = glm::vec3(-.04, 0, 0);
-	object1->transform.rotate(60, 60, 60);
-    //object1->rigidbody.forceApplied = glm::vec3(-.3, 0, 0);
+	Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
+    object1->addRigidbody(rgdbdy);
+	object1->transform.translate(10, 0, 0);
+	//object1->rigidbody.momentum = glm::vec3(.03, 0, 0);
+    object1->rigidbody.force = glm::vec3(-.005, 0, 0);
+    object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
     object1->rigidbody.enabled = true;
 
 	Rigidbody rgbdy2 = Rigidbody();
-	object2->addRigidBody(rgbdy2);
+	object2->addRigidbody(rgbdy2);
 	object2->transform.rotate(60, 60, 60);
 	//object2->transform.translate(-1.0, 0.0, 0.0);
 	object2->rigidbody.enabled = true;
