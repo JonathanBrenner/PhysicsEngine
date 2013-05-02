@@ -126,25 +126,23 @@ void Initialize(int argc, char* argv[])
 	OnGLError("Front face");
     
 	GameObject* object1 = new GameObject("container.obj", 1);
-	GameObject* object2 = new GameObject("cuboid.obj", 2);
+	GameObject* object2 = new GameObject("container.obj", 2);
 	gameObjects.push_back(object1);
-	//gameObjects.push_back(object2);
+	gameObjects.push_back(object2);
     
 
 	Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
     object1->addRigidbody(rgdbdy);
     object1->transform.translate(5, 0, 0);
-	//object1->transform.translate(0, 0, -50);
-    //object2->transform.translate(10, 0, 0);
 	//object1->rigidbody.momentum = glm::vec3(0, 0, -0.5);
-    object1->rigidbody.force = glm::vec3(-.01, 0, 0);
+    object1->rigidbody.force = glm::vec3(-.005, 0, 0);
     //object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
     object1->rigidbody.enabled = true;
 
-	Rigidbody rgbdy2 = Rigidbody();
+	Rigidbody rgbdy2 = Rigidbody(0.5, 1, 0.5);
 	object2->addRigidbody(rgbdy2);
-	object2->transform.rotate(60, 60, 60);
-	//object2->transform.translate(-1.0, 0.0, 0.0);
+	//object2->transform.rotate(60, 60, 60);
+	//object2->transform.translate(0.0, 0.0, 0.0);
 	object2->rigidbody.enabled = true;
 
     CreateCube();
@@ -188,15 +186,6 @@ void game_loop(void)
 			gameObjects[i]->update();
         }
 
-//		if(CollisionDetection::intersects(gameObjects[0]->collider, gameObjects[1]->collider))
-//		{
-//			//std::cout << "Yes\n";
-//		}
-//		else
-//		{
-//			//std::cout << "No\n";
-//		}
-
 		CollisionDetection();
 
         //Key events
@@ -220,7 +209,11 @@ void CollisionDetection()
 		for(int j = i + 1; j < gameObjects.size(); j++)
 		{
 			glm::vec3 answer = CollisionDetection::intersects(gameObjects[i]->collider, gameObjects[j]->collider);
-			std::cout << answer.x << " " << answer.y << " " << answer.z << std::endl;
+			if(answer.x != answer.null)
+			{
+				gameObjects[i]->rigidbody.onCollision(gameObjects[j], answer);
+				gameObjects[ij]->rigidbody.onCollision(gameObjects[i], answer);
+			}
 		}
 	}
 }

@@ -59,11 +59,11 @@ void Rigidbody::update()
     gameObject->transform.modelMatrix = newModelMatrix;
 }
 
-void Rigidbody::onCollision(GameObject* other, CollisionPoint collisionPoint)
+void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
 {
     glm::vec3 radialPosition;
     Rigidbody otherRigidbody = other->rigidbody;
-    radialPosition = collisionPoint.position - gameObject->transform.position;
+    radialPosition = collisionPoint - gameObject->transform.position;
         
     /*** This force may not be in the correct coordinate space ***/
     torque += glm::cross(radialPosition, otherRigidbody.getForce(true));

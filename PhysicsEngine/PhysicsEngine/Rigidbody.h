@@ -26,7 +26,7 @@ public:
     Rigidbody(float width, float height, float depth);
     
     void update();
-    void onCollision(GameObject* other, CollisionPoint collisionPoint);
+    void onCollision(GameObject* other, glm::vec3 collisionPoint);
     glm::vec3 getForce(bool worldCoordinates);
     
     GameObject* gameObject;
