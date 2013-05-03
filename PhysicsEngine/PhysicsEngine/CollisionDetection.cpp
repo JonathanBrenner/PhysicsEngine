@@ -298,8 +298,8 @@ bool CollisionDetection::processTetrehedron(Simplex &simplex, Simplex &A, Simple
     glm::vec3 ac = c - a;
     glm::vec3 ad = d - a;
     glm::vec3 ab = b - a;
-    glm::vec3 bc = c - b;
-    glm::vec3 bd = d - b;
+    //glm::vec3 bc = c - b;
+    //glm::vec3 bd = d - b;
              
 	glm::vec3 acd = glm::cross(ac, ad);
     glm::vec3 abd = glm::cross(ab, ad);

@@ -62,9 +62,9 @@ void Rigidbody::update()
 
 void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
 {
-    glm::vec3 radialPosition;
     Rigidbody otherRigidbody = other->rigidbody;
-    radialPosition = collisionPoint - gameObject->transform.position;
+    glm::vec3 radialPosition = collisionPoint - gameObject->transform.position;
+    glm::vec3 otherRadialPosition = collisionPoint - other->transform.position;
     
     // Find the normal of the collision (approximating using the vector connecting the center of mass of both objects)
     glm::vec3 collisionNormal = other->transform.position - gameObject->transform.position;
@@ -73,18 +73,17 @@ void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
     // Find the velocity of both objects
     glm::vec3 velocity = momentum / mass;
     glm::vec3 otherVelocity = otherRigidbody.momentum / otherRigidbody.mass;
+    glm::vec3 relativeVelocity = otherVelocity - velocity;
     
-    // Calculate the change in momentum of this object after the collision
-    glm::vec3 momentumChange = ((1 + elasticity) * (glm::dot(otherVelocity, collisionNormal) - glm::dot(velocity, collisionNormal)) * collisionNormal) /
-        ((1 / mass) + (1 / otherRigidbody.mass));
+    glm::mat3 inverseInertiaTensor = glm::inverse(inertiaTensor);
+    glm::mat3 otherInverseInertiaTensor = glm::inverse(other->rigidbody.inertiaTensor);
     
-    glm::vec3 angularMomentumChange;
+    float impulse = glm::dot(-(1 + elasticity) * relativeVelocity, collisionNormal) /
+        ((1 / mass) + (1 / otherRigidbody.mass) + glm::dot(glm::cross(inverseInertiaTensor * glm::cross(radialPosition, collisionNormal), radialPosition) +
+        glm::cross(otherInverseInertiaTensor * glm::cross(otherRadialPosition, collisionNormal), otherRadialPosition), collisionNormal));
     
-    momentum += momentumChange;
-    
-    /*** This force may not be in the correct coordinate space ***/
-    //torque += glm::cross(radialPosition, otherRigidbody.getForce(true));
-    //force += otherRigidbody.getForce(true);
+    momentum -= impulse * collisionNormal;
+    angularMomentum -= impulse * glm::cross(radialPosition, collisionNormal);
 }
 
 glm::vec3 Rigidbody::getForce(bool worldCoordinates)
