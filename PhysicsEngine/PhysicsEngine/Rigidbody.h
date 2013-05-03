@@ -27,7 +27,7 @@ public:
     
     void update();
     void onCollision(GameObject* other, glm::vec3 collisionPoint);
-    glm::vec3 getForce(bool worldCoordinates);
+    void calcCenterOfMass();
     
     GameObject* gameObject;
     
@@ -40,6 +40,7 @@ public:
     
     // Mass
     float mass;
+    glm::vec3 centerOfMass;
     
     // Linear dynamics
     glm::vec3 momentum;

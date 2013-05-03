@@ -37,7 +37,6 @@ void Rigidbody::init()
     angularMomentum = glm::vec3(0, 0, 0);
     torque = glm::vec3(0, 0, 0);
     orientation = glm::quat(0, 0, 0, 1);
-
 }
 
 void Rigidbody::update()
@@ -86,18 +85,17 @@ void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
     angularMomentum -= impulse * glm::cross(radialPosition, collisionNormal);
 }
 
-glm::vec3 Rigidbody::getForce(bool worldCoordinates)
+void Rigidbody::calcCenterOfMass()
 {
-    if (worldCoordinates)
+    glm::vec3 sum = glm::vec3(0, 0, 0);
+    unsigned long size = gameObject->vertices.size();
+    
+    for (int i = 0; i < size; i++)
     {
-        glm::vec4 forceVector4 = glm::vec4(force.x, force.y, force.z, 0);
-        forceVector4 = gameObject->transform.modelMatrix * forceVector4;
-        return glm::vec3(forceVector4.x, forceVector4.y, forceVector4.z);
+        sum += glm::vec3(gameObject->vertices[i].position[0], gameObject->vertices[i].position[1], gameObject->vertices[i].position[2]);
     }
-    else
-    {
-        return force;
-    }
+
+    centerOfMass = sum * (1.0f / size);
 }
 
 Rigidbody::Derivative Rigidbody::evaluate(Rigidbody::State& state, float t, float dt, const Rigidbody::Derivative &derivative)

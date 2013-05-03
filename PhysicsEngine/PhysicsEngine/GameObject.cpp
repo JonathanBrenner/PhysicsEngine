@@ -160,7 +160,6 @@ GameObject::GameObject(std::string pathName, int index)
 			}
 		}
     }
-    std::cout << vertices.size() << "\n";
 }
 
 GameObject::GameObject(const GameObject& orig)
@@ -235,8 +234,8 @@ void GameObject::create(GLuint shaderProgramID1)
     
     onGLError("ERROR: Could not create the shader program");
 	
-	fragmentShaderID = loadShader("container.fs", GL_FRAGMENT_SHADER);
-	vertexShaderID = loadShader("container.vs", GL_VERTEX_SHADER);
+	fragmentShaderID = loadShader("direction.fs", GL_FRAGMENT_SHADER);
+	vertexShaderID = loadShader("direction.vs", GL_VERTEX_SHADER);
 	
 	glAttachShader(shaderProgramID, vertexShaderID);
 	glAttachShader(shaderProgramID, fragmentShaderID);
@@ -376,4 +375,5 @@ void GameObject::addRigidbody(Rigidbody& rigidbody)
 {
     rigidbody.gameObject = this;
     this->rigidbody = rigidbody;
+    rigidbody.calcCenterOfMass();
 }
