@@ -1,4 +1,4 @@
-# This file uses centimeters as units for non-parametric coordinates.
+# This file uses centimeters as units for non-parametric coordinates
 
 mtllib ugly_cube.mtl
 v -0.364355 0.011065 0.327924

@@ -26,7 +26,6 @@ public:
     Rigidbody(float width, float height, float depth);
     
     void update();
-    void onCollision(GameObject* other, glm::vec3 collisionPoint);
     void calcCenterOfMass();
     
     GameObject* gameObject;
@@ -48,6 +47,7 @@ public:
     
     // Angular dynamics
     glm::mat3 inertiaTensor;
+    glm::mat3 inverseInertiaTensor;
     glm::quat orientation;
     glm::quat angularVelocity;
     glm::vec3 displacement;

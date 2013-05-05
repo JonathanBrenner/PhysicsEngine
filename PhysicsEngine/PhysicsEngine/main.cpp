@@ -61,7 +61,7 @@ void checkShader(GLuint);
 void OnGLError(const char*);
 GLuint LoadShader(const char*, GLenum);
 void CollisionDetection();
-
+void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point);
 
 int main(int argc, char* argv[])
 {
@@ -125,25 +125,22 @@ void Initialize(int argc, char* argv[])
 	glFrontFace(GL_CCW);
 	OnGLError("Front face");
     
-	GameObject* object1 = new GameObject("ugly_cube.obj", 1);
-	GameObject* object2 = new GameObject("ugly_cube.obj", 2);
+	GameObject* object1 = new GameObject("ugly_cylinder.obj", 1);
+	GameObject* object2 = new GameObject("wtf.obj", 2);
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
     
-    Rigidbody rgdbdy = Rigidbody(0.5, 1, 0.5);
-    object1->addRigidbody(rgdbdy);
-    object1->transform.translate(4, 0.2, 0);
-	object1->rigidbody.momentum = glm::vec3(-0.5, 0, 0);
-    //object1->rigidbody.force = glm::vec3(-.005, 0, 0);
-    //object1->rigidbody.torque = glm::vec3(0.05, 0.05, -0.05);
+    Rigidbody rigidbody1 = Rigidbody(0.5, 1, 0.5);
+    object1->addRigidbody(rigidbody1);
     object1->rigidbody.enabled = true;
-
-	Rigidbody rgbdy2 = Rigidbody(0.5, 1, 0.5);
-	object2->addRigidbody(rgbdy2);
-    //object2->rigidbody.angularMomentum = glm::vec3(0.5, 0, 0);
-	//object2->transform.rotate(60, 60, 60);
-	//object2->transform.translate(0.0, 0.0, 0.0);
-	object2->rigidbody.enabled = true;
+    object1->transform.translate(4, 0, 0);
+    object1->rigidbody.momentum = glm::vec3(-0.5 , 0, 0);
+    
+    Rigidbody rigidbody2 = Rigidbody(0.5, 1, 0.5);
+    object2->addRigidbody(rigidbody2);
+    object2->rigidbody.enabled = true;
+    //object2->transform.translate(-4, 0.5, 0);
+    //object2->rigidbody.momentum = glm::vec3(0.2, 0, 0);
 
     CreateCube();
 }
@@ -211,12 +208,39 @@ void CollisionDetection()
 			glm::vec3 answer = CollisionDetection::intersects(gameObjects[i]->collider, gameObjects[j]->collider);
 			if(answer.x != answer.null)
 			{
-                std::cout << answer.x << ", " << answer.y << ", " << answer.z << "\n";
-				gameObjects[i]->rigidbody.onCollision(gameObjects[j], answer);
-				gameObjects[j]->rigidbody.onCollision(gameObjects[i], answer);
+                CollisionResponse(*gameObjects[i], *gameObjects[j], answer);
 			}
 		}
 	}
+}
+
+void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point)
+{
+    float elasticity = 0;
+
+    glm::vec3 radialPositionA = point - a.rigidbody.centerOfMass;
+    glm::vec3 radialPositionB = point - b.rigidbody.centerOfMass;
+    
+    // Find the normal of the collision (approximating using the vector connecting the center of mass of both objects)
+    glm::vec3 normal = a.rigidbody.centerOfMass - b.rigidbody.centerOfMass;
+    normal = glm::normalize(normal);
+    
+    // Find the velocity of both objects
+    glm::vec3 pointVelocityA = a.rigidbody.momentum / a.rigidbody.mass + a.rigidbody.angularVelocity * radialPositionA;
+    glm::vec3 pointVelocityB = b.rigidbody.momentum / b.rigidbody.mass + b.rigidbody.angularVelocity * radialPositionB;
+    
+    glm::vec3 relativeVelocity = pointVelocityA - pointVelocityB;
+    
+    float impulse = glm::dot(-(1 + elasticity) * relativeVelocity, normal) /
+        (glm::dot(normal, normal * ((1 / a.rigidbody.mass) + (1 / b.rigidbody.mass))) +
+        glm::dot(glm::cross(a.rigidbody.inverseInertiaTensor * glm::cross(radialPositionA, normal), radialPositionA) +
+        glm::cross(b.rigidbody.inverseInertiaTensor * glm::cross(radialPositionB, normal), radialPositionB), normal));
+    
+    a.rigidbody.momentum += impulse * normal;
+    a.rigidbody.angularMomentum += impulse * a.rigidbody.inverseInertiaTensor * glm::cross(radialPositionA, normal);
+    
+    b.rigidbody.momentum -= impulse * normal;
+    b.rigidbody.angularMomentum -= impulse * b.rigidbody.inverseInertiaTensor * glm::cross(radialPositionB, normal);
 }
 
 void CreateCube()
@@ -224,7 +248,7 @@ void CreateCube()
 	//Create all the things
 	for(int i = 0; i < gameObjects.size(); i++)
 	{
-		gameObjects[i]->create(shaderProgramID);
+		gameObjects[i]->create();
 	}
 }
 
@@ -252,13 +276,16 @@ void checkShader(GLuint shader)
 	GLint status;
 	//lGetShaderiv gets a particular parameter of the shader
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE) {
+	if (status == GL_FALSE)
+    {
 		int loglen;
 		char logbuffer[1000];
 		//there's also a corresponding glGetProgramInfoLog function for the linked program object
 		glGetShaderInfoLog(shader, sizeof(logbuffer), &loglen, logbuffer);
 		fprintf(stderr, "OpenGL Shader Compile Error:\n%.*s", loglen, logbuffer);
-	} else {
+	}
+    else
+    {
 		int loglen;
 		char logbuffer[1000];
 		glGetShaderInfoLog(shader, sizeof(logbuffer), &loglen, logbuffer);

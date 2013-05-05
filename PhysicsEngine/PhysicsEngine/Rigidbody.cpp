@@ -23,6 +23,7 @@ Rigidbody::Rigidbody(float width, float height, float depth)
     inertiaTensor[0][0] = mass * (height * height + depth * depth) / 12;
     inertiaTensor[1][1] = mass * (width * width + depth * depth) / 12;
     inertiaTensor[2][2] = mass * (height * height + width * width) / 12;
+    inverseInertiaTensor = glm::inverse(inertiaTensor);
 }
 
 void Rigidbody::init()
@@ -57,32 +58,12 @@ void Rigidbody::update()
     // Update Model matrix
     glm::mat4 newModelMatrix = glm::translate(glm::mat4(), state.position) * glm::mat4_cast(orientation);
     gameObject->transform.modelMatrix = newModelMatrix;
-}
-
-void Rigidbody::onCollision(GameObject* other, glm::vec3 collisionPoint)
-{
-    Rigidbody otherRigidbody = other->rigidbody;
-    glm::vec3 radialPosition = collisionPoint - gameObject->transform.position;
-    glm::vec3 otherRadialPosition = collisionPoint - other->transform.position;
     
-    // Find the normal of the collision (approximating using the vector connecting the center of mass of both objects)
-    glm::vec3 collisionNormal = other->transform.position - gameObject->transform.position;
-    collisionNormal = glm::normalize(collisionNormal);
-    
-    // Find the velocity of both objects
-    glm::vec3 velocity = momentum / mass;
-    glm::vec3 otherVelocity = otherRigidbody.momentum / otherRigidbody.mass;
-    glm::vec3 relativeVelocity = otherVelocity - velocity;
-    
-    glm::mat3 inverseInertiaTensor = glm::inverse(inertiaTensor);
-    glm::mat3 otherInverseInertiaTensor = glm::inverse(other->rigidbody.inertiaTensor);
-    
-    float impulse = glm::dot(-(1 + elasticity) * relativeVelocity, collisionNormal) /
-        ((1 / mass) + (1 / otherRigidbody.mass) + glm::dot(glm::cross(inverseInertiaTensor * glm::cross(radialPosition, collisionNormal), radialPosition) +
-        glm::cross(otherInverseInertiaTensor * glm::cross(otherRadialPosition, collisionNormal), otherRadialPosition), collisionNormal));
-    
-    momentum -= impulse * collisionNormal;
-    angularMomentum -= impulse * glm::cross(radialPosition, collisionNormal);
+    glm::vec4 temp(centerOfMass.x, centerOfMass.y, centerOfMass.z, 1);
+    temp = gameObject->transform.modelMatrix * temp;
+    centerOfMass.x = temp.x;
+    centerOfMass.y = temp.y;
+    centerOfMass.z = temp.z;
 }
 
 void Rigidbody::calcCenterOfMass()
@@ -92,10 +73,20 @@ void Rigidbody::calcCenterOfMass()
     
     for (int i = 0; i < size; i++)
     {
-        sum += glm::vec3(gameObject->vertices[i].position[0], gameObject->vertices[i].position[1], gameObject->vertices[i].position[2]);
+        glm::vec3 temp;
+        temp.x = gameObject->vertices[i].position[0];
+        temp.y = gameObject->vertices[i].position[1];
+        temp.z = gameObject->vertices[i].position[2];
+        sum += temp;
     }
 
     centerOfMass = sum * (1.0f / size);
+    glm::vec4 temp(centerOfMass.x, centerOfMass.y, centerOfMass.z, 1);
+    temp = gameObject->transform.modelMatrix * temp;
+    centerOfMass.x = temp.x;
+    centerOfMass.y = temp.y;
+    centerOfMass.z = temp.z;
+    //std::cout << centerOfMass.x << ", " << centerOfMass.y << ", " << centerOfMass.z << "\n";
 }
 
 Rigidbody::Derivative Rigidbody::evaluate(Rigidbody::State& state, float t, float dt, const Rigidbody::Derivative &derivative)

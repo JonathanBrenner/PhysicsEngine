@@ -34,7 +34,7 @@ public:
     GameObject(const GameObject& orig);
 	~GameObject();
 
-	void create(GLuint shaderProgramID1);
+	void create();
 	void updateModelMatrix();
 	void update();
 	void draw();

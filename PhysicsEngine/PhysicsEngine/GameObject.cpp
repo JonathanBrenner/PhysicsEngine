@@ -228,7 +228,7 @@ GLuint GameObject::loadShader(const char* filename, GLenum shader_type)
 	return shader_id;
 }
 
-void GameObject::create(GLuint shaderProgramID1)
+void GameObject::create()
 {
 	shaderProgramID = glCreateProgram();
     
