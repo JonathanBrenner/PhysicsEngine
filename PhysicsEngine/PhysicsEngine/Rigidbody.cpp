@@ -53,7 +53,7 @@ void Rigidbody::update()
     momentum = state.momentum;
     orientation = state.orientation;
     angularMomentum = state.angularMomentum;
-    angularVelocity = glm::inverse(inertiaTensor) * angularMomentum;
+    angularVelocity = inverseInertiaTensor * angularMomentum;
     
     // Update Model matrix
     glm::mat4 newModelMatrix = glm::translate(glm::mat4(), state.position) * glm::mat4_cast(orientation);
@@ -129,7 +129,7 @@ void Rigidbody::integrate(State& state, float t, float dt)
 void Rigidbody::recalculate(State& state)
 {
     state.velocity = state.momentum / mass;
-    glm::vec3 angularVelocityVector = glm::inverse(inertiaTensor) * state.angularMomentum;
+    glm::vec3 angularVelocityVector = inverseInertiaTensor * state.angularMomentum;
     state.angularVelocity = glm::quat(0, angularVelocityVector.x, angularVelocityVector.y, angularVelocityVector.z);
     state.orientation = glm::normalize(state.orientation);
     state.spin = state.angularVelocity * state.orientation * Time::deltaTime / 2;

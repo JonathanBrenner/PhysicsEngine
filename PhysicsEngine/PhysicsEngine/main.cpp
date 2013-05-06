@@ -126,27 +126,29 @@ void Initialize(int argc, char* argv[])
 	OnGLError("Front face");
     
 	GameObject* object1 = new GameObject("ugly_cylinder.obj", 1);
-	GameObject* object2 = new GameObject("wtf.obj", 2);
-    GameObject* object3 = new GameObject("ugly_cube.obj", 3);
+	GameObject* object2 = new GameObject("ugly_cube.obj", 2);
+    //GameObject* object3 = new GameObject("wtf.obj", 3);
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
-    gameObjects.push_back(object3);
+    //gameObjects.push_back(object3);
     
     Rigidbody rigidbody1 = Rigidbody(0.5, 1, 0.5);
     object1->addRigidbody(rigidbody1);
     object1->rigidbody.enabled = true;
-    object1->transform.translate(13, 0, 0);
-    object1->rigidbody.momentum = glm::vec3(-0.5, 0, 0);
+    //object1->transform.translate(5, 0, 0);
+    //object1->rigidbody.momentum = glm::vec3(-0.2, 0, 0);
     
     Rigidbody rigidbody2 = Rigidbody(1, 1, 1);
     object2->addRigidbody(rigidbody2);
     object2->rigidbody.enabled = true;
+    object2->transform.translate(-3, 0, 0);
+    object2->rigidbody.momentum = glm::vec3(0.3, 0, 0);
     
-    Rigidbody rigidbody3 = Rigidbody(1, 1, 1);
-    object3->addRigidbody(rigidbody3);
-    object3->rigidbody.enabled = true;
-    object3->transform.translate(-1, 13, 0);
-    object3->rigidbody.momentum = glm::vec3(0, -0.5, 0);
+//    Rigidbody rigidbody3 = Rigidbody(1, 1, 1);
+//    object3->addRigidbody(rigidbody3);
+//    object3->rigidbody.enabled = true;
+//    object3->transform.translate(0, 4.5, 0);
+//    object3->rigidbody.momentum = glm::vec3(0, -0.2, 0);
 
     CreateCube();
 }
@@ -232,8 +234,8 @@ void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point)
     normal = glm::normalize(normal);
     
     // Find the velocity of both objects
-    glm::vec3 pointVelocityA = a.rigidbody.momentum / a.rigidbody.mass + a.rigidbody.angularVelocity * radialPositionA;
-    glm::vec3 pointVelocityB = b.rigidbody.momentum / b.rigidbody.mass + b.rigidbody.angularVelocity * radialPositionB;
+    glm::vec3 pointVelocityA = a.rigidbody.momentum / a.rigidbody.mass + glm::cross(a.rigidbody.angularVelocity, radialPositionA);
+    glm::vec3 pointVelocityB = b.rigidbody.momentum / b.rigidbody.mass + glm::cross(b.rigidbody.angularVelocity, radialPositionB);
     
     glm::vec3 relativeVelocity = pointVelocityA - pointVelocityB;
     
@@ -241,6 +243,8 @@ void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point)
         (glm::dot(normal, normal * ((1 / a.rigidbody.mass) + (1 / b.rigidbody.mass))) +
         glm::dot(glm::cross(a.rigidbody.inverseInertiaTensor * glm::cross(radialPositionA, normal), radialPositionA) +
         glm::cross(b.rigidbody.inverseInertiaTensor * glm::cross(radialPositionB, normal), radialPositionB), normal));
+    
+    //std::cout << "impulse: " << impulse << " angular momentum: " << glm::cross(radialPositionA, normal).x << " " << glm::cross(radialPositionA, normal).y << " " << glm::cross(radialPositionA, normal).z << " relative velocity: " << relativeVelocity.x << " " << relativeVelocity.y << " " << relativeVelocity.z << "\n";
     
     a.rigidbody.momentum += impulse * normal;
     a.rigidbody.angularMomentum += impulse * a.rigidbody.inverseInertiaTensor * glm::cross(radialPositionA, normal);
