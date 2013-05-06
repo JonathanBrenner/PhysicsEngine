@@ -127,20 +127,26 @@ void Initialize(int argc, char* argv[])
     
 	GameObject* object1 = new GameObject("ugly_cylinder.obj", 1);
 	GameObject* object2 = new GameObject("wtf.obj", 2);
+    GameObject* object3 = new GameObject("ugly_cube.obj", 3);
 	gameObjects.push_back(object1);
 	gameObjects.push_back(object2);
+    gameObjects.push_back(object3);
     
     Rigidbody rigidbody1 = Rigidbody(0.5, 1, 0.5);
     object1->addRigidbody(rigidbody1);
     object1->rigidbody.enabled = true;
-    object1->transform.translate(4, 0, 0);
-    object1->rigidbody.momentum = glm::vec3(-0.5 , 0, 0);
+    object1->transform.translate(13, 0, 0);
+    object1->rigidbody.momentum = glm::vec3(-0.5, 0, 0);
     
-    Rigidbody rigidbody2 = Rigidbody(0.5, 1, 0.5);
+    Rigidbody rigidbody2 = Rigidbody(1, 1, 1);
     object2->addRigidbody(rigidbody2);
     object2->rigidbody.enabled = true;
-    //object2->transform.translate(-4, 0.5, 0);
-    //object2->rigidbody.momentum = glm::vec3(0.2, 0, 0);
+    
+    Rigidbody rigidbody3 = Rigidbody(1, 1, 1);
+    object3->addRigidbody(rigidbody3);
+    object3->rigidbody.enabled = true;
+    object3->transform.translate(-1, 13, 0);
+    object3->rigidbody.momentum = glm::vec3(0, -0.5, 0);
 
     CreateCube();
 }
@@ -216,7 +222,7 @@ void CollisionDetection()
 
 void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point)
 {
-    float elasticity = 0;
+    float elasticity = 1;
 
     glm::vec3 radialPositionA = point - a.rigidbody.centerOfMass;
     glm::vec3 radialPositionB = point - b.rigidbody.centerOfMass;
@@ -231,7 +237,7 @@ void CollisionResponse(GameObject& a, GameObject& b, glm::vec3 point)
     
     glm::vec3 relativeVelocity = pointVelocityA - pointVelocityB;
     
-    float impulse = glm::dot(-(1 + elasticity) * relativeVelocity, normal) /
+    float impulse = -(1 + elasticity) * glm::dot(relativeVelocity, normal) /
         (glm::dot(normal, normal * ((1 / a.rigidbody.mass) + (1 / b.rigidbody.mass))) +
         glm::dot(glm::cross(a.rigidbody.inverseInertiaTensor * glm::cross(radialPositionA, normal), radialPositionA) +
         glm::cross(b.rigidbody.inverseInertiaTensor * glm::cross(radialPositionB, normal), radialPositionB), normal));

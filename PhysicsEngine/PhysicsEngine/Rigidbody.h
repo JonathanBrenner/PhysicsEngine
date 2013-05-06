@@ -30,8 +30,6 @@ public:
     
     GameObject* gameObject;
     
-    float elasticity;
-    
     // Solid Cuboid inertia tensor
     float width;
     float height;
@@ -49,10 +47,10 @@ public:
     glm::mat3 inertiaTensor;
     glm::mat3 inverseInertiaTensor;
     glm::quat orientation;
-    glm::quat angularVelocity;
     glm::vec3 displacement;
     glm::vec3 torque;
     glm::vec3 angularMomentum;
+    glm::vec3 angularVelocity;
     
     bool enabled;
 

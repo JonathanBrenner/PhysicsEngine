@@ -30,7 +30,6 @@ void Rigidbody::init()
 {
     enabled = false;
 	mass = 1;
-    elasticity = 1;
     
     momentum = glm::vec3(0, 0, 0);
     force = glm::vec3(0, 0, 0);
@@ -54,6 +53,7 @@ void Rigidbody::update()
     momentum = state.momentum;
     orientation = state.orientation;
     angularMomentum = state.angularMomentum;
+    angularVelocity = glm::inverse(inertiaTensor) * angularMomentum;
     
     // Update Model matrix
     glm::mat4 newModelMatrix = glm::translate(glm::mat4(), state.position) * glm::mat4_cast(orientation);
@@ -86,7 +86,14 @@ void Rigidbody::calcCenterOfMass()
     centerOfMass.x = temp.x;
     centerOfMass.y = temp.y;
     centerOfMass.z = temp.z;
-    //std::cout << centerOfMass.x << ", " << centerOfMass.y << ", " << centerOfMass.z << "\n";
+    
+    for (int i = 0; i < size; i++)
+    {
+        gameObject->vertices[i].position[0] -= centerOfMass.x;
+        gameObject->vertices[i].position[1] -= centerOfMass.y;
+        gameObject->vertices[i].position[2] -= centerOfMass.z;
+    }
+    centerOfMass = glm::vec3(0, 0, 0);
 }
 
 Rigidbody::Derivative Rigidbody::evaluate(Rigidbody::State& state, float t, float dt, const Rigidbody::Derivative &derivative)
@@ -121,8 +128,8 @@ void Rigidbody::integrate(State& state, float t, float dt)
 
 void Rigidbody::recalculate(State& state)
 {
-    state.velocity = state.momentum / mass;    
-    glm::vec3 angularVelocityVector = state.angularMomentum * glm::inverse(inertiaTensor);
+    state.velocity = state.momentum / mass;
+    glm::vec3 angularVelocityVector = glm::inverse(inertiaTensor) * state.angularMomentum;
     state.angularVelocity = glm::quat(0, angularVelocityVector.x, angularVelocityVector.y, angularVelocityVector.z);
     state.orientation = glm::normalize(state.orientation);
     state.spin = state.angularVelocity * state.orientation * Time::deltaTime / 2;
